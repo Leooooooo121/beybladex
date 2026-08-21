@@ -1,0 +1,326 @@
+{
+  "listName": "\u6230\u9b25\u9640\u87ba",
+  "products": [
+    {
+      "id": 716314,
+      "title": "\u3010M.M\u5c0f\u8216\u3011\u300e\u9810\u8cfc\u300f 9\u6708 TAKARA TOMY \u6230\u9b25\u9640\u87ba UX-03 \u9b54\u5c0e\u795e\u6756 \u6230\u9b25 \u5c0d\u6230 \u5fa9\u53e4 \u71b1\u8840",
+      "type": 1,
+      "has_permission": true,
+      "listShowUnbuyableProducts": false,
+      "permission_cus_level_names": [],
+      "product_tags": [
+        {
+          "id": 2476,
+          "store_id": 6353,
+          "title": "\u9810\u8cfc",
+          "color": "rgba(255, 255, 255, 1)",
+          "width": 85,
+          "position": 0,
+          "style": 3,
+          "text_color": "#ffffff",
+          "text_size": 20,
+          "type": 0,
+          "image": "https:\/\/image.bvshop.tw\/6353\/tag\/6353_6a3bbc70c3bf5.gif",
+          "file_list": [
+            {
+              "raw": {
+                "uid": 1782299758190
+              },
+              "uid": 1782299758190,
+              "url": "https://storage.googleapis.com/bvshop-tw/6353/tag/6353_6a3bbc70c3bf5.gif",
+              "name": "預購吊牌_起始掉落加速版_透明GIF.gif",
+              "size": 1460677,
+              "status": "success",
+              "response": "/upload/6353/tag/6353_6a3bbc70c3bf5.gif",
+              "percentage": 100
+            }
+          ],
+          "created_at": "2026-06-24 18:40:55",
+          "updated_at": "2026-06-24 19:16:40",
+          "pivot": {
+            "product_id": 716314,
+            "product_tag_id": 2476
+          }
+        }
+      ],
+      "photo": "https:\/\/image.bvshop.tw\/6353\/product\/6353_6a462050ded82.jpeg",
+      "quantity": 0,
+      "quantity_shown": 1,
+      "limit_min": null,
+      "limit_max": null,
+      "is_multi": 1,
+      "order_out_of_stock": 0,
+      "shownOriginPrice": 295,
+      "shownPrice": 295,
+      "showAllName": true,
+      "soldout_hint": "\u88dc\u8ca8\u4e2d",
+      "soldout_link": null,
+      "hide_price": 0,
+      "pre_order": 1,
+      "pre_order_auto": 0,
+      "pre_order_hint": "",
+      "split_spec_status": 0,
+      "button_spec_status": 1,
+      "size_name": "\u898f\u683c",
+      "special_price": 295,
+      "price": 295,
+      "is_customer_price": false,
+      "route": "Shopee6a4620509d97a",
+      "script": "eNqVVM1OwkAQvvcpmmhC26TdoEYPXkjQAzcTnqBpV9pYimErF0OCMWhBjBwEw0EgXDQaNSGRkIA8jduWk69ga\/lpoQ04h3YzO\/PNN7PfLmAIhiTJcbtqPb\/hwtC8bxl6lWAAYXtJwPz9nIgoZ1RKY702CSWRxmc1d9eNndomFdlAp1BAe9Hd7ehOTOKRFIvQXI5XqFyaQ1CBggbFpB2SEGlOkHg1BSl6fwYCAEmyrL8aVEWWJeYhzGzpcNvisH6FS11cblmXX8sMPSx9VOfV3Hy3ph9lobI\/zTU30vysGo+tqS8gg1lyOdwn1aynvtkY4lHFun7BNzXrvWx\/lxPA+rjeifhHsTCSVWYfKJeCWlyRhZOFMxUcH3V8pgqanFEp+jwQEIDxoDm+6FuFIu40cbltdV6NxodV6v4MK\/iubvR0XOx9D+ru\/Ge7xD\/ZZGE6k4NxhUeIisgoLmUQVCMeZflxNElGNMeL4poZAJi3XTx6cJtJHh3GycRBGMfQKzCt66zpIPl7LW\/7Q7jM78jkjEOEGiIRv0x8QMFiWVMwYa1P+lwlFfuB0LJyKgWzzvsQNJY8TfwCUStc+Q==",
+      "hashtag": "",
+      "show_hashtag": 0,
+      "category_title": "\u5c1a\u672a\u5206\u985e\u5546\u54c1",
+      "cart_setting_id": 0,
+      "show_between_special_prices": false,
+      "spec_min_special_price": 295,
+      "spec_max_special_price": 295,
+      "spec_max_price": 295,
+      "spec_min_price": 295,
+      "addons": [],
+      "photos": [
+        {
+          "name": "\/6353\/product\/6353_6a462050ded82.jpeg.webp",
+          "url": "https:\/\/image.bvshop.tw\/6353\/product\/6353_6a462050ded82.jpeg.webp"
+        },
+        {
+          "name": "\/6353\/product\/6353_6a4620519eaa9.jpeg.webp",
+          "url": "https:\/\/image.bvshop.tw\/6353\/product\/6353_6a4620519eaa9.jpeg.webp"
+        },
+        {
+          "name": "\/6353\/product\/6353_6a4620522c322.jpeg.webp",
+          "url": "https:\/\/image.bvshop.tw\/6353\/product\/6353_6a4620522c322.jpeg.webp"
+        },
+        {
+          "name": "\/6353\/product\/6353_6a46205291958.jpeg.webp",
+          "url": "https:\/\/image.bvshop.tw\/6353\/product\/6353_6a46205291958.jpeg.webp"
+        },
+        {
+          "name": "\/6353\/product\/6353_6a46205320aab.jpeg.webp",
+          "url": "https:\/\/image.bvshop.tw\/6353\/product\/6353_6a46205320aab.jpeg.webp"
+        },
+        {
+          "name": "\/6353\/product\/6353_6a4620538c045.jpeg.webp",
+          "url": "https:\/\/image.bvshop.tw\/6353\/product\/6353_6a4620538c045.jpeg.webp"
+        },
+        {
+          "name": "\/6353\/product\/6353_6a462054902cf.jpeg.webp",
+          "url": "https:\/\/image.bvshop.tw\/6353\/product\/6353_6a462054902cf.jpeg.webp"
+        }
+      ],
+      "options": [
+        {
+          "name": "\u898f\u683c"
+        }
+      ],
+      "specs": [
+        {
+          "id": 2480930,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02_3ulrhfg19",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": 0,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02_3ulrhfg19",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02_3ulrhfg19"
+        },
+        {
+          "id": 2480931,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02cvyym8xakj",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": -1,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02cvyym8xakj",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02cvyym8xakj"
+        },
+        {
+          "id": 2480932,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02akuma123456",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": 0,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02akuma123456",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02akuma123456"
+        },
+        {
+          "id": 2480933,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02qhximg",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": -7,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02qhximg",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02qhximg"
+        },
+        {
+          "id": 2480934,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02linchenyuuu",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": 0,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02linchenyuuu",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02linchenyuuu"
+        },
+        {
+          "id": 2480935,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02mceric456",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": 0,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02mceric456",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02mceric456"
+        },
+        {
+          "id": 2480936,
+          "size_name": "\u9810\u8cfc-1\u500b(\u4e0d\u53ef\u642d\u5176\u4ed6\u9810\u8cfc) #\u4e0d\u88dc",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": 0,
+          "option_values": "\u9810\u8cfc-1\u500b(\u4e0d\u53ef\u642d\u5176\u4ed6\u9810\u8cfc) #\u4e0d\u88dc",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u4e0d\u53ef\u642d\u5176\u4ed6\u9810\u8cfc) #\u4e0d\u88dc"
+        },
+        {
+          "id": 2480937,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02bassmio0000",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": 0,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02bassmio0000",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02bassmio0000"
+        },
+        {
+          "id": 2480938,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02teddylai070",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": -1,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02teddylai070",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02teddylai070"
+        },
+        {
+          "id": 2480939,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02ryan850205",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": 0,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02ryan850205",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02ryan850205"
+        },
+        {
+          "id": 2480940,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02little_kai",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": -1,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02little_kai",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02little_kai"
+        },
+        {
+          "id": 2480941,
+          "size_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02ted31625",
+          "special_price": null,
+          "is_customer_price": false,
+          "price": 295,
+          "limit_max": null,
+          "limit_min": null,
+          "quantity": 0,
+          "option_values": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02ted31625",
+          "product_photo_name": null,
+          "option_name": "\u9810\u8cfc-1\u500b(\u9650\u5ba2\u8a02ted31625"
+        }
+      ],
+      "option_image_status": null,
+      "optionImages": {
+        "預購-1個(限客訂_3ulrhfg19": "#FFFFFF",
+        "預購-1個(限客訂cvyym8xakj": "#FFFFFF",
+        "預購-1個(限客訂akuma123456": "#FFFFFF",
+        "預購-1個(限客訂qhximg": "#FFFFFF",
+        "預購-1個(限客訂linchenyuuu": "#FFFFFF",
+        "預購-1個(限客訂mceric456": "#FFFFFF",
+        "預購-1個(不可搭其他預購) #不補": "#FFFFFF",
+        "預購-1個(限客訂bassmio0000": "#FFFFFF",
+        "預購-1個(限客訂teddylai070": "#FFFFFF",
+        "預購-1個(限客訂ryan850205": "#FFFFFF",
+        "預購-1個(限客訂little_kai": "#FFFFFF",
+        "預購-1個(限客訂ted31625": "#FFFFFF"
+      },
+      "status": 1,
+      "listing_at": null,
+      "listing_seconds": 0,
+      "quick_check": 1,
+      "sales_amount": 18,
+      "show_sales_amount": 0,
+      "product_periodic_setting": [],
+      "product_periodic_setting_id": null,
+      "favorite": null,
+      "enable_favorite": 1,
+      "description_tab_text": "\u5546\u54c1\u63cf\u8ff0",
+      "description": "<p>\u6b61\u8fce\u9810\u8cfc<br><br>\u90e8\u5206\u54c1\u724c\u5be6\u54c1\u8ddf\u5716\u9762\u6703\u6709\u8f03\u5927\u843d\u5dee<br>\u82e5\u80fd\u63a5\u53d7\u518d\u4e0b\u6a19<br><br>\u5546\u54c1\u7686\u6703\u6709\u9810\u8cfc\u3001\u73fe\u8ca8\u5169\u7a2e\u7368\u7acb\u5eab\u5b58\u63a7\u7ba1<br>\u5982\u679c\u9810\u8cfc\u5546\u54c1\u6709\u914d\u6578\u554f\u984c\u6703\u6709\u780d\u55ae<br>\u6703\u4f9d\u7167\u4e0b\u6a19\u9806\u5e8f\u4f9d\u5e8f\u51fa\u8ca8\u7d66\u5ba2\u4eba<br>\u4e0a\u9762\u6709\u544a\u77e5\u70ba\u7368\u7acb\u5eab\u5b58\uff0c\u4e0d\u6703\u56e0\u70ba\u9810\u8cfc\u5c31\u53bb\u52d5\u5230\u73fe\u8ca8\u5eab\u5b58(\u6b64\u70ba\u7d66\u73fe\u8ca8\u5ba2\u4eba\u4f7f\u7528)<br>\u80fd\u63a5\u53d7\u8005\u5728\u4e0b\u6a19\uff0c\u4e0b\u6a19\u5f8c\u624d\u63d0\u51fa\u6b64\u722d\u8b70\u8005\uff0c\u8acb\u6055\u6211\u5011\u7121\u6cd5\u63a5\u4f60\u7684\u751f\u610f<br><br>\u25ce\u55ae\u7d14\u9810\u8cfc\u6b64\u5546\u54c1\u7121\u642d\u914d\u5176\u4ed6\u5546\u54c1\uff0c\u51fa\u8ca8\u901f\u5ea6\u6703\u8f03\u5feb<br>\u82e5\u6709\u9078\u8cfc\u5176\u4ed6\u5546\u54c1\uff0c\u8a02\u55ae\u8907\u96dc\u5ea6\u6703\u6709\u8f03\u6162\u51fa\u8ca8\u554f\u984c\uff0c\u56e0\u9700\u8981\u5f9e\u5009\u5eab\u628a\u5c07\u8a02\u55ae\u5546\u54c1\u62c9\u51fa\u4f86\uff0c\u6545\u8a02\u55ae\u6703\u8f03\u70ba\u9700\u8981\u6642\u9593\u8655\u7406\u3002<br><br>\u8cfc\u7269\u9808\u77e5<br>\u25ce\u82e5\u662f\u53ea\u60f3\u9810\u8cfc\u5546\u54c1<br>   \u2192\u76f4\u63a5\u4e0b\u6a19\u5373\u53ef<br>\u25ce\u7121\u8ad6\u662f\u5e7e\u6708\u9810\u8cfc\u50c5\u55ae\u7d14\u9810\u8cfc<br>\u25ce\u7121\u8ad6\u6a19\u984c\u540c\u6708\u5206\u6216\u4e0d\u540c\u6708\u4efd\u9810\u8cfc+\u73fe\u8ca8<br>   \u2192\u76f4\u63a5\u4e0b\u6a19\u5373\u53ef<br>   \u261e\u56e0\u6709\u73fe\u8ca8\u5546\u54c1\uff0c\u6211\u5011\u6703\u7b49\u9810\u8cfc\u5546\u54c1\u8a02\u55ae\u5167\u5bb9\u5168\u90e8\u5230\u9f4a\uff0c\u624d\u6703\u5bc4\u51fa\uff0c\u4e0d\u4fdd\u7559\u73fe\u8ca8\u3002<br>\u25ce\u5ee0\u5546\u6703\u6709\u5206\u6279\u4ea4\u8ca8\u7684\u60c5\u6cc1\uff0c\u82e5\u5206\u6279\u4ea4\u8ca8\u6211\u5011\u6703\u4f9d\u7167\u4e0b\u6a19\u6642\u9593\u51fa\u8ca8;\u82e5\u5728\u5230\u8ca8\u4e4b\u524d<br>  \u8981\u6c42\u91cd\u65b0\u4e0b\u6a19\u7684\u8cb7\u5bb6\uff0c\u6392\u55ae\u9806\u4f4d\u5c31\u6703\u4f9d\u7167\u65b0\u7684\u9806\u4f4d\u51fa\u8ca8<br>                                                   \u4ee5\u4e0a\u8acb\u52d9\u5fc5\u9075\u5b88<br><br>\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7<br>#\u6230\u9b25\u9640\u87ba<br>#UX-03\u00a0<br>#\u9f8d\u738b\u9583\u64ca<br>#\u5c0d\u6230<br>#\u6230\u9b25<br>#\u9810\u8cfc<br>#\u76d2\u73a9<br>\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7\u25c6\u25c7<br><br>\u95dc\u65bc\u5546\u54c1\u6709\u7591\u616e\u7684\u8cb7\u5bb6\uff0c\u8acb\u5148\u81f3\u8ce3\u5834\u4ecb\u7d39\u770b\u4e00\u4e0b\u7c21\u55ae\u7684Q&A<br>\u82e5\u662f\u5546\u54c1\u4e0a\u6709\u7591\u616e\u4e0d\u78ba\u5b9a\u554f\u984c\uff0c\u6b61\u8fce\u4f7f\u7528\u804a\u804a\u8a0e\u8ad6<br><br>\u9810\u8a082026\u5e7409\u6708\u4e0b\u65ec\u6703\u5230\u8ca8 \uff0c\u5982\u9047\u5230\u4e0d\u53ef\u907f\u514d\u5ef6\u9072\u51fa\u8ca8\u8acb\u591a\u591a\u898b\u8ad2<br>\u5982\u5ee0\u5546\u51fa\u8ca8\u5ef6\u5f8c\u3001\u5546\u54c1\u554f\u984c...\u7b49\u4e0d\u53ef\u6297\u529b\u554f\u984c \u6703\u5ef6\u5f8c\u51fa\u8ca8\u3001\u780d\u55ae  \u8acb\u8010\u5fc3\u7b49\u5019<br><br>*\u6b64\u70ba2026\u5e7409\u6708\u9810\u8cfc\u5546\u54c1(2026\u5e7403\u670830\u865f\u4e0a\u67b6)<\/p>",
+      "qa_tab_text": null,
+      "q_and_a": "<p><br><\/p>",
+      "third_tab_text": null,
+      "third_tab": null,
+      "show_description": 1,
+      "show_qa": 1,
+      "show_third_tab": 0,
+      "shown_photo": 15,
+      "customize_fields": [],
+      "summary": null,
+      "hashtags": [],
+      "show_delisting_time": 0,
+      "delisting_at": null,
+      "show_spec_before_listing": 1,
+      "yt_video_status": 0,
+      "yt_video_url": null,
+      "yt_video_aspect_ratio": "16\/9",
+      "yt_video_pos": "front",
+      "yt_video_autoplay": 0,
+      "yt_video_image": null,
+      "addon_info": null
+    }
+  ],
+  "currentPage": 1,
+  "total": 64,
+  "lastPage": 3
+}
