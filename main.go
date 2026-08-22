@@ -12,6 +12,7 @@ import (
 
 	"beyblade/config"
 	"beyblade/engine"
+	"beyblade/models"
 	"beyblade/notifier"
 	"beyblade/proxy"
 )
@@ -27,6 +28,7 @@ func main() {
 	fmt.Print(banner)
 
 	configPath := flag.String("config", "config.json", "設定檔路徑")
+	testNotify := flag.Bool("test-notify", false, "發送測試通知至已啟用的管道 (Telegram / Discord / Console)")
 	flag.Parse()
 
 	// 1. 讀取設定檔
@@ -37,7 +39,34 @@ func main() {
 
 	log.Printf("[INFO] 成功載入配置檔: %s (已啟用任務數: %d)", *configPath, countEnabledTasks(cfg))
 
-	// 2. 初始化線程安全 Proxy Manager
+	// 2. 初始化通知發送模組 (Console, Discord, Telegram)
+	notif := notifier.NewMultiNotifier(cfg.Notifiers)
+
+	// 測試通知模式
+	if *testNotify {
+		log.Println("[INFO] 正在發送測試補貨通知訊息...")
+		testStatus := models.ProductStatus{
+			SiteName:    "測試通知平台",
+			ProductID:   "TEST-001",
+			Title:       "【測試商品】TAKARA TOMY 戰鬥陀螺 UX 測試通知",
+			URL:         "https://mmtoyshop.com",
+			VariantID:   "VAR-999",
+			VariantName: "現貨測試規格",
+			Price:       295.00,
+			Currency:    "TWD",
+			InStock:     true,
+			Quantity:    99,
+			Timestamp:   time.Now(),
+		}
+		if err := notif.Send(testStatus); err != nil {
+			log.Printf("[ERROR] 測試通知發送失敗: %v", err)
+		} else {
+			log.Println("[INFO] 測試通知發送指令已完成！請檢查 Telegram / Discord / 終端機。")
+		}
+		return
+	}
+
+	// 3. 初始化線程安全 Proxy Manager
 	cooldown := time.Duration(cfg.Global.ProxyCooldownSec) * time.Second
 	proxyMgr := proxy.NewProxyManager(cfg.Proxies, cooldown)
 	if proxyMgr.TotalCount() > 0 {
@@ -45,9 +74,6 @@ func main() {
 	} else {
 		log.Printf("[INFO] 未指定 Proxy，採用本機直接連線模式")
 	}
-
-	// 3. 初始化通知發送模組 (Console, Discord, Telegram)
-	notif := notifier.NewMultiNotifier(cfg.Notifiers)
 
 	// 4. 建立調度引擎
 	eng, err := engine.NewEngine(cfg, proxyMgr, notif)

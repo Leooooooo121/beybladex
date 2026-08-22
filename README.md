@@ -139,6 +139,13 @@ go mod tidy
 go run main.go
 ```
 
+**發送測試通知（驗證 Telegram / Discord 設定）：**
+```powershell
+go run main.go -test-notify
+# 或
+.\monitor.exe -test-notify
+```
+
 **指定自訂設定檔路徑：**
 ```powershell
 go run main.go -config /path/to/my_config.json

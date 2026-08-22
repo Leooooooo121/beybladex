@@ -5,8 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html"
 	"log"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
@@ -25,18 +27,33 @@ type MultiNotifier struct {
 	notifiers []Notifier
 }
 
-// NewMultiNotifier 依據設定檔建立啟用的通知模組
+// NewMultiNotifier 依據設定檔與環境變數建立啟用的通知模組
 func NewMultiNotifier(cfg config.NotifiersConfig) *MultiNotifier {
 	mn := &MultiNotifier{}
 
 	if cfg.Console {
 		mn.notifiers = append(mn.notifiers, NewConsoleNotifier())
 	}
-	if cfg.DiscordWebhookURL != "" {
-		mn.notifiers = append(mn.notifiers, NewDiscordNotifier(cfg.DiscordWebhookURL))
+
+	discordURL := cfg.DiscordWebhookURL
+	if envURL := os.Getenv("DISCORD_WEBHOOK_URL"); envURL != "" {
+		discordURL = envURL
 	}
-	if cfg.TelegramBotToken != "" && cfg.TelegramChatID != "" {
-		mn.notifiers = append(mn.notifiers, NewTelegramNotifier(cfg.TelegramBotToken, cfg.TelegramChatID))
+	if discordURL != "" {
+		mn.notifiers = append(mn.notifiers, NewDiscordNotifier(discordURL))
+	}
+
+	tgToken := cfg.TelegramBotToken
+	if envToken := os.Getenv("TELEGRAM_BOT_TOKEN"); envToken != "" {
+		tgToken = envToken
+	}
+	tgChatID := cfg.TelegramChatID
+	if envChat := os.Getenv("TELEGRAM_CHAT_ID"); envChat != "" {
+		tgChatID = envChat
+	}
+
+	if tgToken != "" && tgChatID != "" {
+		mn.notifiers = append(mn.notifiers, NewTelegramNotifier(tgToken, tgChatID))
 	}
 
 	return mn
@@ -132,7 +149,7 @@ type discordEmbed struct {
 	Title       string         `json:"title"`
 	Description string         `json:"description"`
 	URL         string         `json:"url"`
-	Color       int            `json:"color"` // 綠色: 5814783
+	Color       int            `json:"color"`
 	Fields      []discordField `json:"fields"`
 	Thumbnail   *discordImage  `json:"thumbnail,omitempty"`
 	Timestamp   string         `json:"timestamp"`
@@ -205,7 +222,7 @@ func (d *DiscordNotifier) Send(status models.ProductStatus) error {
 }
 
 // =========================================================================
-// 3. Telegram Bot Notifier
+// 3. Telegram Bot Notifier (TG 推播模組)
 // =========================================================================
 
 type TelegramNotifier struct {
@@ -234,6 +251,12 @@ type telegramPayload struct {
 
 func (t *TelegramNotifier) Send(status models.ProductStatus) error {
 	ts := status.Timestamp.Format("2006-01-02 15:04:05.000")
+
+	// HTML 特殊字元跳脫，避免包含 <, >, & 的商品名稱造成 Telegram HTML 解析失敗
+	safeTitle := html.EscapeString(status.Title)
+	safeVariant := html.EscapeString(status.VariantName)
+	safeSite := html.EscapeString(status.SiteName)
+
 	text := fmt.Sprintf(
 		"⚡ <b>【補貨通知】</b>\n\n"+
 			"🏪 <b>來源:</b> %s\n"+
@@ -243,9 +266,9 @@ func (t *TelegramNotifier) Send(status models.ProductStatus) error {
 			"📊 <b>庫存:</b> %d\n"+
 			"🕒 <b>時間:</b> %s\n"+
 			"🔗 <a href=\"%s\">立即前往購買</a>",
-		status.SiteName,
-		status.Title,
-		status.VariantName,
+		safeSite,
+		safeTitle,
+		safeVariant,
 		status.Currency,
 		status.Price,
 		status.Quantity,
@@ -267,7 +290,7 @@ func (t *TelegramNotifier) Send(status models.ProductStatus) error {
 	apiURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage", t.token)
 	resp, err := t.client.Post(apiURL, "application/json", bytes.NewReader(data))
 	if err != nil {
-		return err
+		return fmt.Errorf("發送至 Telegram 失敗: %w", err)
 	}
 	defer resp.Body.Close()
 
