@@ -11,7 +11,7 @@ type Response struct {
 
 // Product 代表商品細節
 type Product struct {
-	ID    string      `json:"id"`
+	ID    int         `json:"id"`
 	Title string      `json:"title"`
 	Route string      `json:"route"`
 	Specs []SpecsInfo `json:"specs"`
