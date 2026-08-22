@@ -147,9 +147,18 @@ go mod tidy
 
 ### 3. 編譯與執行
 
-**直接執行：**
+**單次即時健康診斷（測試目標網站連線、耗時與抓取商品）：**
 ```powershell
-go run main.go
+go run main.go -check
+# 或
+.\monitor.exe -check
+```
+
+**詳細日誌模式（印出每一次輪詢耗時與掃描狀態）：**
+```powershell
+go run main.go -v
+# 或
+.\monitor.exe -v
 ```
 
 **發送測試通知（驗證 Telegram / Discord 設定）：**

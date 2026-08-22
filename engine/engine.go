@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"beyblade/config"
@@ -24,10 +25,18 @@ type Engine struct {
 	monitors  []sites.SiteMonitor
 	stockMap  sync.Map // 快取商品歷史庫存狀態: key(string) -> inStock(bool)
 	wg        sync.WaitGroup
+	verbose   bool
+
+	// 統計數據 (線程安全原子計數)
+	startTime      time.Time
+	totalPolls     atomic.Uint64
+	totalRestocks  atomic.Uint64
+	totalErrors    atomic.Uint64
+	totalLatencyMs atomic.Uint64
 }
 
 // NewEngine 建立並初始化引擎
-func NewEngine(cfg *config.Config, proxyMgr *proxy.ProxyManager, notif notifier.Notifier) (*Engine, error) {
+func NewEngine(cfg *config.Config, proxyMgr *proxy.ProxyManager, notif notifier.Notifier, verbose bool) (*Engine, error) {
 	bufferSize := cfg.Global.ChannelBufferSize
 	if bufferSize <= 0 {
 		bufferSize = 1000
@@ -39,6 +48,8 @@ func NewEngine(cfg *config.Config, proxyMgr *proxy.ProxyManager, notif notifier.
 		notifier:  notif,
 		eventChan: make(chan models.ProductStatus, bufferSize),
 		monitors:  make([]sites.SiteMonitor, 0),
+		verbose:   verbose,
+		startTime: time.Now(),
 	}
 
 	// 依據 Task 設定實例化網站監控器
@@ -71,6 +82,9 @@ func (e *Engine) Start(ctx context.Context) error {
 	// 啟動通知事件消費 Listener
 	notifier.StartListener(ctx, e.eventChan, e.notifier)
 
+	// 啟動定期健康狀態看板 (每 30 秒自動輸出一次統計摘要)
+	go e.startStatsDashboard(ctx)
+
 	// 為每個監控任務啟動獨立的 Worker Goroutine
 	for _, mon := range e.monitors {
 		e.wg.Add(1)
@@ -91,7 +105,8 @@ func (e *Engine) Start(ctx context.Context) error {
 func (e *Engine) runWorker(ctx context.Context, mon sites.SiteMonitor) {
 	defer e.wg.Done()
 
-	log.Printf("[INFO] [Worker:%s] 任務啟動", mon.Name())
+	log.Printf("[INFO] [Worker:%s] 任務啟動 (輪詢間隔: %d~%d ms)", mon.Name(),
+		e.cfg.Global.PollIntervalMinMs, e.cfg.Global.PollIntervalMaxMs)
 
 	for {
 		select {
@@ -101,10 +116,16 @@ func (e *Engine) runWorker(ctx context.Context, mon sites.SiteMonitor) {
 		default:
 		}
 
-		startTime := time.Now()
+		reqStart := time.Now()
 		products, err := mon.CheckStock(ctx)
+		latency := time.Since(reqStart)
+
+		e.totalPolls.Add(1)
+		e.totalLatencyMs.Add(uint64(latency.Milliseconds()))
 
 		if err != nil {
+			e.totalErrors.Add(1)
+
 			// 異常處理與隨機退避 (Backoff: 2s ~ 5s)
 			backoffSec := e.cfg.Global.BackoffMinSec
 			if diff := e.cfg.Global.BackoffMaxSec - e.cfg.Global.BackoffMinSec; diff > 0 {
@@ -124,8 +145,14 @@ func (e *Engine) runWorker(ctx context.Context, mon sites.SiteMonitor) {
 		}
 
 		// 處理商品狀態與庫存變更比對 (State Caching & Deduplication)
-		restockCount := 0
+		inStockCount := 0
+		newRestockCount := 0
+
 		for _, p := range products {
+			if p.InStock {
+				inStockCount++
+			}
+
 			key := p.UniqueKey()
 			val, existed := e.stockMap.Load(key)
 
@@ -133,22 +160,28 @@ func (e *Engine) runWorker(ctx context.Context, mon sites.SiteMonitor) {
 				// 第一次掃描發現此商品
 				e.stockMap.Store(key, p.InStock)
 				if p.InStock {
-					restockCount++
+					newRestockCount++
+					e.totalRestocks.Add(1)
 					e.dispatch(p)
 				}
 			} else {
 				wasInStock := val.(bool)
 				if !wasInStock && p.InStock {
 					// 狀態由「無庫存」變為「有庫存」 -> 觸發補貨通知！
-					restockCount++
+					newRestockCount++
+					e.totalRestocks.Add(1)
 					e.dispatch(p)
 				}
 				e.stockMap.Store(key, p.InStock)
 			}
 		}
 
-		elapsed := time.Since(startTime)
-		_ = elapsed
+		// 若啟用詳細日誌模式 (-v)，印出每次輪詢結果
+		if e.verbose {
+			ts := time.Now().Format("15:04:05.000")
+			log.Printf("[%s] [POLL] [%s] 掃描完成 (耗時: %dms | 規格總數: %d | 有庫存: %d)",
+				ts, mon.Name(), latency.Milliseconds(), len(products), inStockCount)
+		}
 
 		// 計算隨機時間抖動 (Jitter)
 		sleepDuration := e.calculateJitter()
@@ -183,7 +216,131 @@ func (e *Engine) calculateJitter() time.Duration {
 	}
 
 	jitterMs := minMs + rand.Intn(maxMs-minMs+1)
-	// 額外加入 10-50ms 隨機微抖動以打亂 TLS 特徵
 	microJitter := rand.Intn(41) + 10
 	return time.Duration(jitterMs+microJitter) * time.Millisecond
+}
+
+// startStatsDashboard 定期印出運行狀態看板
+func (e *Engine) startStatsDashboard(ctx context.Context) {
+	ticker := time.NewTicker(30 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			e.PrintStats()
+		}
+	}
+}
+
+// PrintStats 印出當前系統運作指標看板
+func (e *Engine) PrintStats() {
+	uptime := time.Since(e.startTime).Truncate(time.Second)
+	polls := e.totalPolls.Load()
+	errors := e.totalErrors.Load()
+	restocks := e.totalRestocks.Load()
+	latencySum := e.totalLatencyMs.Load()
+
+	avgLatency := int64(0)
+	if polls > 0 {
+		avgLatency = int64(latencySum / polls)
+	}
+
+	// 計算當前追蹤的規格數量
+	trackedItems := 0
+	e.stockMap.Range(func(key, value interface{}) bool {
+		trackedItems++
+		return true
+	})
+
+	fmt.Println("\n---------------------------------------------------------------")
+	fmt.Printf("📊 【系統運作健康看板】(運行時間: %v)\n", uptime)
+	fmt.Printf("🚀 運行中任務數: %d 個 | 代理池可用: %d/%d\n",
+		len(e.monitors), e.proxyMgr.ActiveCount(), e.proxyMgr.TotalCount())
+	fmt.Printf("⚡ 累計輪詢次數: %d 次 | 平均連線延遲: %d ms\n", polls, avgLatency)
+	fmt.Printf("📦 監控中規格數: %d 項 | 累計補貨推播: %d 次\n", trackedItems, restocks)
+	fmt.Printf("🛡️ 異常/封鎖次數: %d 次\n", errors)
+	fmt.Println("---------------------------------------------------------------")
+}
+
+// RunHealthCheck 對所有啟用的任務執行一次診斷測試並輸出完整結果
+func RunHealthCheck(cfg *config.Config, proxyMgr *proxy.ProxyManager) error {
+	timeout := time.Duration(cfg.Global.TimeoutSeconds) * time.Second
+	fmt.Println("\n🔍 ================== 系統診斷模式 (Health Check) ==================")
+	fmt.Printf("📅 檢測時間: %s\n", time.Now().Format("2006-01-02 15:04:05"))
+	fmt.Printf("🌐 代理池配置: %d 個 Proxy\n\n", proxyMgr.TotalCount())
+
+	ctx, cancel := context.WithTimeout(context.Background(), timeout*time.Duration(len(cfg.Tasks)+1))
+	defer cancel()
+
+	successCount := 0
+	failCount := 0
+
+	for _, task := range cfg.Tasks {
+		if !task.Enabled {
+			fmt.Printf("⚪ [任務跳過] %s (已停用)\n\n", task.Name)
+			continue
+		}
+
+		fmt.Printf("▶️ [正在檢測] 任務: %s (%s)\n", task.Name, task.SiteType)
+		fmt.Printf("🔗 目標網址: %s\n", task.URL)
+
+		mon, err := sites.CreateMonitor(task, proxyMgr, timeout)
+		if err != nil {
+			fmt.Printf("❌ 建立適配器失敗: %v\n\n", err)
+			failCount++
+			continue
+		}
+
+		start := time.Now()
+		products, err := mon.CheckStock(ctx)
+		elapsed := time.Since(start)
+
+		if err != nil {
+			fmt.Printf("❌ 請求失敗: %v (耗時: %v)\n\n", err, elapsed)
+			failCount++
+			continue
+		}
+
+		successCount++
+		inStockCount := 0
+		for _, p := range products {
+			if p.InStock {
+				inStockCount++
+			}
+		}
+
+		fmt.Printf("✅ 連線成功！ (耗時: %d ms | 掃描規格總數: %d 項 | 有庫存: %d 項)\n",
+			elapsed.Milliseconds(), len(products), inStockCount)
+
+		// 印出前 5 個商品範例
+		showLimit := 5
+		if len(products) < showLimit {
+			showLimit = len(products)
+		}
+		if showLimit > 0 {
+			fmt.Println("   📋 商品抽樣預覽:")
+			for i := 0; i < showLimit; i++ {
+				p := products[i]
+				stockStr := "❌ 無庫存"
+				if p.InStock {
+					stockStr = fmt.Sprintf("✅ 有庫存 (數量: %d)", p.Quantity)
+				}
+				fmt.Printf("   - [%s] %s | 規格: %s | 價格: %s %.2f | %s\n",
+					stockStr, p.Title, p.VariantName, p.Currency, p.Price, p.URL)
+			}
+			if len(products) > showLimit {
+				fmt.Printf("   ... 其餘 %d 項已略過\n", len(products)-showLimit)
+			}
+		}
+		fmt.Println()
+	}
+
+	fmt.Println("================================================================")
+	fmt.Printf("🏁 診斷完成: 成功 %d 個任務 / 失敗 %d 個任務\n", successCount, failCount)
+	fmt.Println("================================================================")
+
+	return nil
 }

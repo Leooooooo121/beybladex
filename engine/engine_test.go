@@ -79,7 +79,7 @@ func TestEngine_LifecycleAndDeduplication(t *testing.T) {
 	mockNotif := &mockNotifier{received: make(chan models.ProductStatus, 10)}
 	pm := proxy.NewProxyManager([]string{}, 1*time.Second)
 
-	eng, err := NewEngine(cfg, pm, mockNotif)
+	eng, err := NewEngine(cfg, pm, mockNotif, false)
 	if err != nil {
 		t.Fatalf("建立 Engine 失敗: %v", err)
 	}

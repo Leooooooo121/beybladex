@@ -13,8 +13,8 @@
   "notifiers": {
     "console": true,
     "discord_webhook_url": "",
-    "telegram_bot_token": "",
-    "telegram_chat_id": ""
+    "telegram_bot_token": "1275062276:AAHzeHL5paQkAvKPCKw371Nyvs9dW6_p950",
+    "telegram_chat_id": "-5574191315"
   },
   "tasks": [
     {

@@ -29,6 +29,8 @@ func main() {
 
 	configPath := flag.String("config", "config.json", "設定檔路徑")
 	testNotify := flag.Bool("test-notify", false, "發送測試通知至已啟用的管道 (Telegram / Discord / Console)")
+	checkMode := flag.Bool("check", false, "單次診斷檢查模式 (即時檢測所有目標網站連線與庫存狀態並輸出報告)")
+	verbose := flag.Bool("v", false, "詳細日誌模式 (印出每次輪詢毫秒耗時與掃描結果)")
 	flag.Parse()
 
 	// 1. 讀取設定檔
@@ -75,8 +77,16 @@ func main() {
 		log.Printf("[INFO] 未指定 Proxy，採用本機直接連線模式")
 	}
 
+	// 單次診斷檢查模式 (-check)
+	if *checkMode {
+		if err := engine.RunHealthCheck(cfg, proxyMgr); err != nil {
+			log.Fatalf("[FATAL] 診斷檢測異常: %v", err)
+		}
+		return
+	}
+
 	// 4. 建立調度引擎
-	eng, err := engine.NewEngine(cfg, proxyMgr, notif)
+	eng, err := engine.NewEngine(cfg, proxyMgr, notif, *verbose)
 	if err != nil {
 		log.Fatalf("[FATAL] 引擎初始化失敗: %v", err)
 	}
