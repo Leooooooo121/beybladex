@@ -7,7 +7,7 @@ import (
 
 // ProductStatus 代表統一標準化的商品狀態事件
 type ProductStatus struct {
-	SiteName    string            `json:"site_name"`       // 網站來源名稱 (如 "MMToyShop", "Shopify-Kith")
+	SiteName    string            `json:"site_name"`       // 網站來源名稱 (如 "MMToyShop", "Shopify-Kith", "Funbox")
 	ProductID   string            `json:"product_id"`      // 商品唯一識別碼
 	Title       string            `json:"title"`           // 商品名稱
 	URL         string            `json:"url"`             // 商品連結
@@ -106,4 +106,27 @@ type BVShopSpec struct {
 	Quantity     int      `json:"quantity"`
 	Price        float64  `json:"price"`
 	SpecialPrice *float64 `json:"special_price"`
+}
+
+// ==========================================
+// Funbox (麗嬰國際) API 資料模型
+// ==========================================
+
+// FunboxProduct 代表 Funbox 商品資料
+type FunboxProduct struct {
+	ID       int64           `json:"id"`
+	URL      string          `json:"url"`      // 例如 "/products/tm09709"
+	Title    string          `json:"title"`    // 例如 "TOMICA Premium 賽車..."
+	Price    float64         `json:"price"`    // 價格
+	Photo    string          `json:"photo"`    // 圖片網址
+	Variants []FunboxVariant `json:"variants"` // 規格庫存列表
+}
+
+// FunboxVariant 代表 Funbox 商品規格與庫存
+type FunboxVariant struct {
+	ID                int64   `json:"id,omitempty"`
+	Title             string  `json:"title,omitempty"`
+	Name              string  `json:"name,omitempty"`
+	Price             float64 `json:"price,omitempty"`
+	InventoryQuantity int     `json:"inventory_quantity"` // 庫存數量
 }

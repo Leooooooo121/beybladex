@@ -37,7 +37,7 @@ type NotifiersConfig struct {
 // TaskConfig 單個監控任務配置
 type TaskConfig struct {
 	ID              string            `json:"id"`                         // 任務唯一 ID
-	SiteType        string            `json:"site_type"`                  // 網站適配器類型 ("shopify", "bvshop", "generic_api")
+	SiteType        string            `json:"site_type"`                  // 網站適配器類型 ("shopify", "bvshop", "funbox", "generic_api")
 	Name            string            `json:"name"`                       // 任務名稱
 	Enabled         bool              `json:"enabled"`                    // 是否啟用
 	URL             string            `json:"url"`                        // 目標 API 網址
@@ -84,6 +84,19 @@ func DefaultConfig() *Config {
 					"Referer":         "https://mmtoyshop.com/category?keyword=%E6%88%B0%E9%AC%A5%E9%99%80%E8%9E%BA",
 				},
 				ExcludeKeywords: []string{"限客訂"},
+			},
+			{
+				ID:       "funbox_beyblade",
+				SiteType: "funbox",
+				Name:     "Funbox 麗嬰國際 - 戰鬥陀螺",
+				Enabled:  true,
+				URL:      "https://shop.funbox.com.tw/category_products/takaratomy/beyblade.json?limit=18&page=1&sort_by=sell_from-desc",
+				Headers: map[string]string{
+					"User-Agent":      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+					"Accept":          "application/json, text/plain, */*",
+					"Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+					"Referer":         "https://shop.funbox.com.tw/categories/takaratomy/beyblade",
+				},
 			},
 			{
 				ID:       "shopify_demo",

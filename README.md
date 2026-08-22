@@ -120,6 +120,19 @@ go mod tidy
       ]
     },
     {
+      "id": "funbox_beyblade",
+      "site_type": "funbox",
+      "name": "Funbox 麗嬰國際 - 戰鬥陀螺",
+      "enabled": true,
+      "url": "https://shop.funbox.com.tw/category_products/takaratomy/beyblade.json?limit=18&page=1&sort_by=sell_from-desc",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Referer": "https://shop.funbox.com.tw/categories/takaratomy/beyblade"
+      }
+    },
+    {
       "id": "shopify_demo",
       "site_type": "shopify",
       "name": "Shopify 示範商城",
@@ -179,7 +192,7 @@ go build -o monitor.exe .
 | | `telegram_bot_token` | string | Telegram Bot Token（留空則停用） |
 | | `telegram_chat_id` | string | Telegram 接收訊息的 Chat ID |
 | **tasks** | `id` | string | 任務唯一識別碼 |
-| | `site_type` | string | 適配器類型：`bvshop` / `shopify` / `generic_api` |
+| | `site_type` | string | 適配器類型：`bvshop` / `funbox` / `shopify` / `generic_api` |
 | | `name` | string | 任務自訂名稱 |
 | | `enabled` | bool | 是否啟用該任務 |
 | | `url` | string | 目標 API 網址 |

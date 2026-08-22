@@ -98,3 +98,48 @@ func TestShopify_Unmarshal(t *testing.T) {
 	}
 	_ = time.Now()
 }
+
+func TestFunbox_Unmarshal(t *testing.T) {
+	jsonData := `[
+		{
+			"id": 71427691,
+			"url": "/products/tm09709",
+			"title": "TOMICA Premium 賽車 馬自達787B 1991 Le Mans 24h No-18",
+			"price": 450,
+			"variants": [
+				{
+					"inventory_quantity": 10
+				}
+			]
+		},
+		{
+			"id": 70137108,
+			"url": "/products/tm052a7x2",
+			"title": "TOMICA No.052 Mini Cooper SE Country All4 (一般色+初回色)",
+			"price": 300,
+			"variants": [
+				{
+					"inventory_quantity": 48
+				}
+			]
+		}
+	]`
+
+	var products []FunboxProduct
+	err := json.Unmarshal([]byte(jsonData), &products)
+	if err != nil {
+		t.Fatalf("Funbox 反序列化失敗: %v", err)
+	}
+
+	if len(products) != 2 {
+		t.Fatalf("預期 2 個商品，得到 %d", len(products))
+	}
+
+	p1 := products[0]
+	if p1.ID != 71427691 || p1.URL != "/products/tm09709" || p1.Price != 450 {
+		t.Errorf("Funbox 第一項商品資料不符: %+v", p1)
+	}
+	if len(p1.Variants) != 1 || p1.Variants[0].InventoryQuantity != 10 {
+		t.Errorf("Funbox 第一項商品規格不符: %+v", p1.Variants)
+	}
+}

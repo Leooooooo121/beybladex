@@ -43,6 +43,21 @@ func TestSiteMonitor_Factory(t *testing.T) {
 	if mon2.TaskID() != "bvshop_test" {
 		t.Errorf("監控器資訊不符: %+v", mon2)
 	}
+
+	funboxTask := config.TaskConfig{
+		ID:       "funbox_test",
+		SiteType: "funbox",
+		Name:     "Funbox Test",
+		URL:      "https://shop.funbox.com.tw/category_products/takaratomy/beyblade.json",
+	}
+
+	mon3, err := CreateMonitor(funboxTask, pm, 5*time.Second)
+	if err != nil {
+		t.Fatalf("建立 Funbox 監控器失敗: %v", err)
+	}
+	if mon3.TaskID() != "funbox_test" {
+		t.Errorf("Funbox 監控器資訊不符: %+v", mon3)
+	}
 }
 
 func TestBVShop_ParseAndFilter(t *testing.T) {
@@ -129,5 +144,79 @@ func TestBVShop_BuildPageURL(t *testing.T) {
 	}
 	if u2 != "https://mmtoyshop.com/category/query?keyword=test&page=3" {
 		t.Errorf("替換 page 參數後的 URL 不正確: %s", u2)
+	}
+}
+
+func TestFunbox_ConvertAndFilter(t *testing.T) {
+	jsonData := `[
+		{
+			"id": 71427691,
+			"url": "/products/tm09709",
+			"title": "TAKARA TOMY 戰鬥陀螺 UX-01 蒼穹巨龍",
+			"price": 450,
+			"variants": [
+				{
+					"id": 111,
+					"title": "現貨規格",
+					"inventory_quantity": 10
+				}
+			]
+		},
+		{
+			"id": 70137108,
+			"url": "/products/tm052a7x2",
+			"title": "TAKARA TOMY 戰鬥陀螺 缺貨款式",
+			"price": 300,
+			"variants": [
+				{
+					"id": 222,
+					"title": "已售完",
+					"inventory_quantity": 0
+				}
+			]
+		}
+	]`
+
+	var products []models.FunboxProduct
+	if err := json.Unmarshal([]byte(jsonData), &products); err != nil {
+		t.Fatalf("反序列化失敗: %v", err)
+	}
+
+	funMon := &FunboxMonitor{
+		task: config.TaskConfig{
+			Name: "Funbox Test",
+		},
+	}
+
+	items := funMon.convertFunboxProducts(products)
+	if len(items) != 2 {
+		t.Fatalf("預期轉換出 2 個規格狀態，得到 %d", len(items))
+	}
+
+	// 第一項：有庫存
+	if items[0].ProductID != "71427691" || !items[0].InStock || items[0].Quantity != 10 {
+		t.Errorf("第一項商品庫存判斷異常: %+v", items[0])
+	}
+	if items[0].URL != "https://shop.funbox.com.tw/products/tm09709" {
+		t.Errorf("第一項商品 URL 構造異常: %s", items[0].URL)
+	}
+
+	// 第二項：無庫存
+	if items[1].ProductID != "70137108" || items[1].InStock || items[1].Quantity != 0 {
+		t.Errorf("第二項商品無庫存判斷異常: %+v", items[1])
+	}
+}
+
+func TestFunbox_BuildPageURL(t *testing.T) {
+	funMon := &FunboxMonitor{}
+	rawURL := "https://shop.funbox.com.tw/category_products/takaratomy/beyblade.json?limit=18&page=1&sort_by=sell_from-desc"
+
+	page2URL, err := funMon.buildPageURL(rawURL, 2)
+	if err != nil {
+		t.Fatalf("buildPageURL 失敗: %v", err)
+	}
+
+	if page2URL != "https://shop.funbox.com.tw/category_products/takaratomy/beyblade.json?limit=18&page=2&sort_by=sell_from-desc" {
+		t.Errorf("產生 Funbox page 2 網址不正確: %s", page2URL)
 	}
 }

@@ -13,8 +13,8 @@
   "notifiers": {
     "console": true,
     "discord_webhook_url": "",
-    "telegram_bot_token": "1275062276:AAHzeHL5paQkAvKPCKw371Nyvs9dW6_p950",
-    "telegram_chat_id": "-5574191315"
+    "telegram_bot_token": "",
+    "telegram_chat_id": ""
   },
   "tasks": [
     {
@@ -22,17 +22,30 @@
       "site_type": "bvshop",
       "name": "M.M小舖 - 戰鬥陀螺",
       "enabled": true,
-      "url": "https://mmtoyshop.com/category/query?",
+      "url": "https://mmtoyshop.com/category/query?keyword=%E6%88%B0%E9%AC%A5%E9%99%80%E8%9E%BA",
       "headers": {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "Accept": "application/json, text/plain, */*",
         "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Referer": "https://mmtoyshop.com/category?"
+        "Referer": "https://mmtoyshop.com/category?keyword=%E6%88%B0%E9%AC%A5%E9%99%80%E8%9E%BA"
       },
       "cookies": "",
       "exclude_keywords": [
         "限客訂"
       ]
+    },
+    {
+      "id": "funbox_beyblade",
+      "site_type": "funbox",
+      "name": "Funbox 麗嬰國際 - 戰鬥陀螺",
+      "enabled": true,
+      "url": "https://shop.funbox.com.tw/category_products/takaratomy/beyblade.json?limit=18&page=1&sort_by=sell_from-desc",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Referer": "https://shop.funbox.com.tw/categories/takaratomy/beyblade"
+      }
     },
     {
       "id": "shopify_kith_demo",
