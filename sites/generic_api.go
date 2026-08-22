@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
+	"math/rand"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -27,10 +30,10 @@ func init() {
 }
 
 // =========================================================================
-// BVShop / MMToyshop 專用適配器
+// BVShop / MMToyshop 專用分頁適配器
 // =========================================================================
 
-// BVShopMonitor 針對 BVShop 架構 (如 MMToyshop) 的庫存監控適配器
+// BVShopMonitor 針對 BVShop 架構 (如 MMToyshop) 的多分頁庫存監控適配器
 type BVShopMonitor struct {
 	task     config.TaskConfig
 	proxyMgr *proxy.ProxyManager
@@ -52,20 +55,77 @@ func (b *BVShopMonitor) Init(task config.TaskConfig, proxyMgr *proxy.ProxyManage
 	return nil
 }
 
+// CheckStock 執行完整的 BVShop 分頁庫存檢查 (遵循反封控規範，加入分頁抖動延遲)
 func (b *BVShopMonitor) CheckStock(ctx context.Context) ([]models.ProductStatus, error) {
-	currentProxy, err := b.proxyMgr.GetNext()
+	// 1. 請求第 1 頁
+	page1URL, err := b.buildPageURL(b.task.URL, 1)
 	if err != nil {
-		return nil, fmt.Errorf("取得 Proxy 失敗: %w", err)
+		return nil, fmt.Errorf("建置第 1 頁 URL 失敗: %w", err)
 	}
 
-	client, err := BuildTLSClient(currentProxy, b.timeout)
+	page1Resp, page1Items, err := b.fetchAndParsePage(ctx, page1URL)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := fhttp.NewRequestWithContext(ctx, "GET", b.task.URL, nil)
+	allResults := page1Items
+	lastPage := page1Resp.LastPage
+	if lastPage <= 1 {
+		return allResults, nil
+	}
+
+	// 支援透過 custom_params["max_pages"] 限制最大抓取頁數 (預設爬到 lastPage)
+	maxPages := lastPage
+	if limitStr, exists := b.task.CustomParams["max_pages"]; exists {
+		if limit, parseErr := strconv.Atoi(limitStr); parseErr == nil && limit > 0 && limit < maxPages {
+			maxPages = limit
+		}
+	}
+
+	// 2. 依序爬取剩餘頁面 (Page 2 .. maxPages)
+	for p := 2; p <= maxPages; p++ {
+		// 遵守反爬蟲規範：非連續無延遲呼叫，在分頁間加入隨機抖動延遲 (Jitter Delay)
+		delay := b.calculatePageJitter()
+		select {
+		case <-ctx.Done():
+			return allResults, ctx.Err()
+		case <-time.After(delay):
+		}
+
+		pageURL, err := b.buildPageURL(b.task.URL, p)
+		if err != nil {
+			log.Printf("[WARN] [BVShop:%s] 建置第 %d 頁 URL 失敗: %v", b.Name(), p, err)
+			continue
+		}
+
+		_, pageItems, err := b.fetchAndParsePage(ctx, pageURL)
+		if err != nil {
+			log.Printf("[WARN] [BVShop:%s] 抓取第 %d 頁失敗: %v", b.Name(), p, err)
+			// 遇到頁面錯誤時記錄警告並保留已取得的資料，繼續下一頁或退出
+			continue
+		}
+
+		allResults = append(allResults, pageItems...)
+	}
+
+	return allResults, nil
+}
+
+// fetchAndParsePage 發送單頁請求並解析商品資料
+func (b *BVShopMonitor) fetchAndParsePage(ctx context.Context, targetURL string) (*models.BVShopResponse, []models.ProductStatus, error) {
+	currentProxy, err := b.proxyMgr.GetNext()
 	if err != nil {
-		return nil, fmt.Errorf("建立 Request 失敗: %w", err)
+		return nil, nil, fmt.Errorf("取得 Proxy 失敗: %w", err)
+	}
+
+	client, err := BuildTLSClient(currentProxy, b.timeout)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	req, err := fhttp.NewRequestWithContext(ctx, "GET", targetURL, nil)
+	if err != nil {
+		return nil, nil, fmt.Errorf("建立 Request 失敗: %w", err)
 	}
 
 	b.applyHeaders(req)
@@ -73,27 +133,66 @@ func (b *BVShopMonitor) CheckStock(ctx context.Context) ([]models.ProductStatus,
 	resp, err := client.Do(req)
 	if err != nil {
 		b.proxyMgr.ReportFailure(currentProxy, 0)
-		return nil, fmt.Errorf("BVShop 請求發送失敗: %w", err)
+		return nil, nil, fmt.Errorf("BVShop 請求發送失敗 (%s): %w", targetURL, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == 403 || resp.StatusCode == 429 {
 		b.proxyMgr.ReportFailure(currentProxy, resp.StatusCode)
-		return nil, fmt.Errorf("遇到反爬防護/頻率限制 (HTTP %d)", resp.StatusCode)
+		return nil, nil, fmt.Errorf("遇到反爬防護/頻率限制 (HTTP %d)", resp.StatusCode)
 	}
 
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("BVShop API 回應異常狀態碼: %d", resp.StatusCode)
+		return nil, nil, fmt.Errorf("BVShop API 回應異常狀態碼: %d", resp.StatusCode)
 	}
 
 	b.proxyMgr.ReportSuccess(currentProxy)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("讀取 Response 內容失敗: %w", err)
+		return nil, nil, fmt.Errorf("讀取 Response 內容失敗: %w", err)
 	}
 
-	return b.parseBVShop(body)
+	var bvResp models.BVShopResponse
+	if err := json.Unmarshal(body, &bvResp); err != nil {
+		return nil, nil, fmt.Errorf("BVShop JSON 解析失敗: %w", err)
+	}
+
+	items := b.convertBVShopProducts(bvResp.Products)
+	return &bvResp, items, nil
+}
+
+// buildPageURL 為目標網址附加或替換 page 參數
+func (b *BVShopMonitor) buildPageURL(rawURL string, page int) (string, error) {
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return "", err
+	}
+	q := u.Query()
+	q.Set("page", strconv.Itoa(page))
+	u.RawQuery = q.Encode()
+	return u.String(), nil
+}
+
+// calculatePageJitter 計算分頁之間的隨機抖動間隔 (預設 600ms ~ 1200ms)
+func (b *BVShopMonitor) calculatePageJitter() time.Duration {
+	minMs := 600
+	maxMs := 1200
+
+	if valStr, ok := b.task.CustomParams["page_delay_min_ms"]; ok {
+		if v, err := strconv.Atoi(valStr); err == nil && v > 0 {
+			minMs = v
+		}
+	}
+	if valStr, ok := b.task.CustomParams["page_delay_max_ms"]; ok {
+		if v, err := strconv.Atoi(valStr); err == nil && v >= minMs {
+			maxMs = v
+		}
+	}
+
+	jitterMs := minMs + rand.Intn(maxMs-minMs+1)
+	microJitter := rand.Intn(31) // 0~30ms 微抖動
+	return time.Duration(jitterMs+microJitter) * time.Millisecond
 }
 
 func (b *BVShopMonitor) applyHeaders(req *fhttp.Request) {
@@ -116,16 +215,11 @@ func (b *BVShopMonitor) applyHeaders(req *fhttp.Request) {
 	}
 }
 
-func (b *BVShopMonitor) parseBVShop(data []byte) ([]models.ProductStatus, error) {
-	var resp models.BVShopResponse
-	if err := json.Unmarshal(data, &resp); err != nil {
-		return nil, fmt.Errorf("BVShop JSON 解析失敗: %w", err)
-	}
-
+func (b *BVShopMonitor) convertBVShopProducts(products []models.BVShopProduct) []models.ProductStatus {
 	var results []models.ProductStatus
 	now := time.Now()
 
-	for _, p := range resp.Products {
+	for _, p := range products {
 		if !b.matchesFilter(p.Title) {
 			continue
 		}
@@ -164,7 +258,7 @@ func (b *BVShopMonitor) parseBVShop(data []byte) ([]models.ProductStatus, error)
 		}
 	}
 
-	return results, nil
+	return results
 }
 
 func (b *BVShopMonitor) matchesFilter(title string) bool {
@@ -271,7 +365,8 @@ func (g *GenericAPIMonitor) CheckStock(ctx context.Context) ([]models.ProductSta
 	var bv models.BVShopResponse
 	if err := json.Unmarshal(body, &bv); err == nil && len(bv.Products) > 0 {
 		bvMonitor := &BVShopMonitor{task: g.task, proxyMgr: g.proxyMgr, timeout: g.timeout}
-		return bvMonitor.parseBVShop(body)
+		items := bvMonitor.convertBVShopProducts(bv.Products)
+		return items, nil
 	}
 
 	var shopify models.ShopifyProductsResponse

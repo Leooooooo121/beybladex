@@ -180,6 +180,16 @@ go build -o monitor.exe .
 | | `exclude_keywords` | `[]string` | 排除關鍵字過濾（如 `["限客訂"]`） |
 | | `headers` | `object` | 自訂 HTTP Headers |
 | | `cookies` | string | 自訂 Cookie 字串 |
+| | `custom_params` | `object` | 擴充參數（如 `"max_pages": "5"`, `"page_delay_min_ms": "600"`, `"page_delay_max_ms": "1200"`） |
+
+---
+
+### 📄 BVShop (MMToyShop) 多分頁爬取與反封控說明
+
+- 系統自動解析第一頁的回應中的 `lastPage`。
+- 若 `lastPage > 1`，會依序發送 `&page=2` 直到 `lastPage`。
+- **嚴格反封控機制**：每爬取一個分頁之間，均會加入隨機微秒抖動延遲（預設 `600ms ~ 1200ms + 微抖動`），且每次分頁請求皆會透過代理池輪詢切換 Proxy，杜絕連續請求觸發 Cloudflare 防護。
+
 
 ---
 

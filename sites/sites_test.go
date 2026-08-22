@@ -2,10 +2,12 @@ package sites
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 	"time"
 
 	"beyblade/config"
+	"beyblade/models"
 	"beyblade/proxy"
 )
 
@@ -82,6 +84,11 @@ func TestBVShop_ParseAndFilter(t *testing.T) {
 		]
 	}`
 
+	var resp models.BVShopResponse
+	if err := json.Unmarshal([]byte(jsonData), &resp); err != nil {
+		t.Fatalf("反序列化失敗: %v", err)
+	}
+
 	bvMon := &BVShopMonitor{
 		task: config.TaskConfig{
 			Name:            "TestShop",
@@ -90,10 +97,7 @@ func TestBVShop_ParseAndFilter(t *testing.T) {
 		},
 	}
 
-	items, err := bvMon.parseBVShop([]byte(jsonData))
-	if err != nil {
-		t.Fatalf("解析失敗: %v", err)
-	}
+	items := bvMon.convertBVShopProducts(resp.Products)
 
 	// 預期只會匹配到 UX-01 的 "現貨" 規格 (排除 "限客訂" 且過濾掉 "其他無關玩具")
 	if len(items) != 1 {
@@ -104,4 +108,26 @@ func TestBVShop_ParseAndFilter(t *testing.T) {
 		t.Errorf("過濾結果不符: %+v", items[0])
 	}
 	_ = context.Background()
+}
+
+func TestBVShop_BuildPageURL(t *testing.T) {
+	bvMon := &BVShopMonitor{}
+
+	// 測試原本已有 query 參數的情況
+	u1, err := bvMon.buildPageURL("https://mmtoyshop.com/category/query?keyword=%E6%88%B0%E9%AC%A5%E9%99%80%E8%9E%BA", 2)
+	if err != nil {
+		t.Fatalf("buildPageURL 失敗: %v", err)
+	}
+	if u1 != "https://mmtoyshop.com/category/query?keyword=%E6%88%B0%E9%AC%A5%E9%99%80%E8%9E%BA&page=2" {
+		t.Errorf("產生的分頁 URL 不正確: %s", u1)
+	}
+
+	// 測試原本已有 page 參數被替換的情況
+	u2, err := bvMon.buildPageURL("https://mmtoyshop.com/category/query?keyword=test&page=1", 3)
+	if err != nil {
+		t.Fatalf("buildPageURL 失敗: %v", err)
+	}
+	if u2 != "https://mmtoyshop.com/category/query?keyword=test&page=3" {
+		t.Errorf("替換 page 參數後的 URL 不正確: %s", u2)
+	}
 }
