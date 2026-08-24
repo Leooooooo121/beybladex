@@ -47,6 +47,8 @@ type TaskConfig struct {
 	Headers         map[string]string `json:"headers,omitempty"`          // 自訂 Headers
 	Cookies         string            `json:"cookies,omitempty"`          // 自訂 Cookie 字串
 	PollIntervalMs  int               `json:"poll_interval_ms,omitempty"` // 單獨指定輪詢間隔 (0 則使用 Global)
+	AutoAddToCart   bool              `json:"auto_add_to_cart,omitempty"` // 發現庫存時是否自動加入購物車 (ATC)
+	SessionCookie   string            `json:"session_cookie,omitempty"`   // 登入狀態 Session Cookie
 	CustomParams    map[string]string `json:"custom_params,omitempty"`    // 擴充自訂參數
 }
 
@@ -72,11 +74,12 @@ func DefaultConfig() *Config {
 		},
 		Tasks: []TaskConfig{
 			{
-				ID:       "mmtoyshop_beyblade",
-				SiteType: "bvshop",
-				Name:     "M.M小舖 - 戰鬥陀螺",
-				Enabled:  true,
-				URL:      "https://mmtoyshop.com/category/query?keyword=%E6%88%B0%E9%AC%A5%E9%99%80%E8%9E%BA",
+				ID:            "mmtoyshop_beyblade",
+				SiteType:      "bvshop",
+				Name:          "M.M小舖 - 戰鬥陀螺",
+				Enabled:       true,
+				AutoAddToCart: true,
+				URL:           "https://mmtoyshop.com/category/query?keyword=%E6%88%B0%E9%AC%A5%E9%99%80%E8%9E%BA",
 				Headers: map[string]string{
 					"User-Agent":      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
 					"Accept":          "application/json, text/plain, */*",

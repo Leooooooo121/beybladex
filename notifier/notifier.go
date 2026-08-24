@@ -121,6 +121,9 @@ func (c *ConsoleNotifier) Send(status models.ProductStatus) error {
 	fmt.Printf("💰 價格資訊: %s %.2f\n", status.Currency, status.Price)
 	fmt.Printf("📊 庫存數量: %d\n", status.Quantity)
 	fmt.Printf("🔗 直達連結: %s\n", status.URL)
+	if status.Extra != nil && status.Extra["atc_status"] != "" {
+		fmt.Printf("🛒 自動加車: %s\n", status.Extra["atc_status"])
+	}
 	fmt.Println("=======================================================")
 	return nil
 }
@@ -177,18 +180,24 @@ type discordPayload struct {
 }
 
 func (d *DiscordNotifier) Send(status models.ProductStatus) error {
+	fields := []discordField{
+		{Name: "來源", Value: status.SiteName, Inline: true},
+		{Name: "規格", Value: status.VariantName, Inline: true},
+		{Name: "價格", Value: fmt.Sprintf("%s %.2f", status.Currency, status.Price), Inline: true},
+		{Name: "庫存數量", Value: fmt.Sprintf("%d", status.Quantity), Inline: true},
+	}
+
+	if status.Extra != nil && status.Extra["atc_status"] != "" {
+		fields = append(fields, discordField{Name: "🛒 搶購加車", Value: status.Extra["atc_status"], Inline: false})
+	}
+
 	embed := discordEmbed{
 		Title:       fmt.Sprintf("🚨 補貨通知: %s", status.Title),
 		Description: fmt.Sprintf("[%s](%s)", status.Title, status.URL),
 		URL:         status.URL,
 		Color:       3066993, // Emerald Green
 		Timestamp:   status.Timestamp.Format(time.RFC3339),
-		Fields: []discordField{
-			{Name: "來源", Value: status.SiteName, Inline: true},
-			{Name: "規格", Value: status.VariantName, Inline: true},
-			{Name: "價格", Value: fmt.Sprintf("%s %.2f", status.Currency, status.Price), Inline: true},
-			{Name: "庫存數量", Value: fmt.Sprintf("%d", status.Quantity), Inline: true},
-		},
+		Fields:      fields,
 		Footer: &discordFooter{
 			Text: "High-Freq Restock Monitor (Golang)",
 		},
@@ -257,6 +266,11 @@ func (t *TelegramNotifier) Send(status models.ProductStatus) error {
 	safeVariant := html.EscapeString(status.VariantName)
 	safeSite := html.EscapeString(status.SiteName)
 
+	atcSection := ""
+	if status.Extra != nil && status.Extra["atc_status"] != "" {
+		atcSection = fmt.Sprintf("\n🛒 <b>搶購狀態:</b> %s", html.EscapeString(status.Extra["atc_status"]))
+	}
+
 	text := fmt.Sprintf(
 		"⚡ <b>【補貨通知】</b>\n\n"+
 			"🏪 <b>來源:</b> %s\n"+
@@ -264,7 +278,7 @@ func (t *TelegramNotifier) Send(status models.ProductStatus) error {
 			"🏷️ <b>規格:</b> %s\n"+
 			"💰 <b>價格:</b> %s %.2f\n"+
 			"📊 <b>庫存:</b> %d\n"+
-			"🕒 <b>時間:</b> %s\n"+
+			"🕒 <b>時間:</b> %s%s\n"+
 			"🔗 <a href=\"%s\">立即前往購買</a>",
 		safeSite,
 		safeTitle,
@@ -273,6 +287,7 @@ func (t *TelegramNotifier) Send(status models.ProductStatus) error {
 		status.Price,
 		status.Quantity,
 		ts,
+		atcSection,
 		status.URL,
 	)
 

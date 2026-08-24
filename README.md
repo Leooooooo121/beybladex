@@ -161,6 +161,13 @@ go run main.go -v
 .\monitor.exe -v
 ```
 
+**測試自動加入購物車（ATC 功能）：**
+```powershell
+go run main.go -test-atc 716314
+# 或
+.\monitor.exe -test-atc 716314
+```
+
 **發送測試通知（驗證 Telegram / Discord 設定）：**
 ```powershell
 go run main.go -test-notify
@@ -204,6 +211,8 @@ go build -o monitor.exe .
 | | `site_type` | string | 適配器類型：`bvshop` / `funbox` / `shopify` / `generic_api` |
 | | `name` | string | 任務自訂名稱 |
 | | `enabled` | bool | 是否啟用該任務 |
+| | `auto_add_to_cart`| bool | 發現有庫存時是否自動執行加購物車 (ATC) |
+| | `session_cookie` | string | 登入 Session（若為空則使用程式碼預設） |
 | | `url` | string | 目標 API 網址 |
 | | `filter_keywords` | `[]string` | 包含關鍵字過濾（選填） |
 | | `exclude_keywords` | `[]string` | 排除關鍵字過濾（如 `["限客訂"]`） |

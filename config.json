@@ -13,8 +13,8 @@
   "notifiers": {
     "console": true,
     "discord_webhook_url": "",
-    "telegram_bot_token": "1275062276:AAHzeHL5paQkAvKPCKw371Nyvs9dW6_p950",
-    "telegram_chat_id": "-5574191315"
+    "telegram_bot_token": "",
+    "telegram_chat_id": ""
   },
   "tasks": [
     {
@@ -22,6 +22,8 @@
       "site_type": "bvshop",
       "name": "M.M小舖 - 戰鬥陀螺",
       "enabled": true,
+      "auto_add_to_cart": true,
+      "session_cookie": "eyJpdiI6ImE4c1k5dDIreGRoL2lyOW1wUmFMeEE9PSIsInZhbHVlIjoiTFhMQStZOW1wNE41VUpsbXg0OW5mdWlUaGprb3ZZc2ZPaUErS3lvT2VYY08zWURLUzR0aGF6clI1ZTZGR1pXd3k5cFl3K0txdGMydDNpcWJFM2oza3IzS0hpRVlObkVwd3ZMUmwrdG5sd050VURVUE8wZExwSnJkeEludXNRb2ciLCJtYWMiOiI3NzFjMmNlZDg1ZTI1MTRjNWM4NDA1MmE2NjMxOGFkZmU0Y2U4OGUyZTNhZDRmNDMyM2JhODVjMmZkMzJkYzM1IiwidGFnIjoiIn0%3D",
       "url": "https://mmtoyshop.com/category/query?keyword=%E6%88%B0%E9%AC%A5%E9%99%80%E8%9E%BA",
       "headers": {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -29,7 +31,6 @@
         "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "Referer": "https://mmtoyshop.com/category?keyword=%E6%88%B0%E9%AC%A5%E9%99%80%E8%9E%BA"
       },
-      "cookies": "",
       "exclude_keywords": [
         "限客訂"
       ]

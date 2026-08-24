@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
 
+	"beyblade/atc"
 	"beyblade/config"
 	"beyblade/models"
 	"beyblade/notifier"
@@ -23,6 +25,7 @@ type Engine struct {
 	notifier  notifier.Notifier
 	eventChan chan models.ProductStatus
 	monitors  []sites.SiteMonitor
+	tasks     map[string]config.TaskConfig
 	stockMap  sync.Map // 快取商品歷史庫存狀態: key(string) -> inStock(bool)
 	wg        sync.WaitGroup
 	verbose   bool
@@ -48,6 +51,7 @@ func NewEngine(cfg *config.Config, proxyMgr *proxy.ProxyManager, notif notifier.
 		notifier:  notif,
 		eventChan: make(chan models.ProductStatus, bufferSize),
 		monitors:  make([]sites.SiteMonitor, 0),
+		tasks:     make(map[string]config.TaskConfig),
 		verbose:   verbose,
 		startTime: time.Now(),
 	}
@@ -65,6 +69,7 @@ func NewEngine(cfg *config.Config, proxyMgr *proxy.ProxyManager, notif notifier.
 		}
 
 		eng.monitors = append(eng.monitors, mon)
+		eng.tasks[task.ID] = task
 	}
 
 	return eng, nil
@@ -105,8 +110,14 @@ func (e *Engine) Start(ctx context.Context) error {
 func (e *Engine) runWorker(ctx context.Context, mon sites.SiteMonitor) {
 	defer e.wg.Done()
 
-	log.Printf("[INFO] [Worker:%s] 任務啟動 (輪詢間隔: %d~%d ms)", mon.Name(),
-		e.cfg.Global.PollIntervalMinMs, e.cfg.Global.PollIntervalMaxMs)
+	taskCfg, hasTask := e.tasks[mon.TaskID()]
+	atcInfo := ""
+	if hasTask && taskCfg.AutoAddToCart {
+		atcInfo = " | ⚡ 已啟用自動加購物車 (ATC)"
+	}
+
+	log.Printf("[INFO] [Worker:%s] 任務啟動 (輪詢間隔: %d~%d ms%s)", mon.Name(),
+		e.cfg.Global.PollIntervalMinMs, e.cfg.Global.PollIntervalMaxMs, atcInfo)
 
 	for {
 		select {
@@ -162,7 +173,7 @@ func (e *Engine) runWorker(ctx context.Context, mon sites.SiteMonitor) {
 				if p.InStock {
 					newRestockCount++
 					e.totalRestocks.Add(1)
-					e.dispatch(p)
+					e.handleRestock(ctx, mon.TaskID(), p)
 				}
 			} else {
 				wasInStock := val.(bool)
@@ -170,7 +181,7 @@ func (e *Engine) runWorker(ctx context.Context, mon sites.SiteMonitor) {
 					// 狀態由「無庫存」變為「有庫存」 -> 觸發補貨通知！
 					newRestockCount++
 					e.totalRestocks.Add(1)
-					e.dispatch(p)
+					e.handleRestock(ctx, mon.TaskID(), p)
 				}
 				e.stockMap.Store(key, p.InStock)
 			}
@@ -192,6 +203,27 @@ func (e *Engine) runWorker(ctx context.Context, mon sites.SiteMonitor) {
 		case <-time.After(sleepDuration):
 		}
 	}
+}
+
+// handleRestock 處理補貨事件，若有開啟 ATC 則立即自動加入購物車
+func (e *Engine) handleRestock(ctx context.Context, taskID string, p models.ProductStatus) {
+	taskCfg, exists := e.tasks[taskID]
+	if exists && taskCfg.AutoAddToCart && (taskCfg.SiteType == "bvshop" || strings.Contains(strings.ToLower(taskCfg.URL), "mmtoyshop")) {
+		if p.Extra == nil {
+			p.Extra = make(map[string]string)
+		}
+
+		// 取得代理與執行自動加入購物車
+		proxyURL, _ := e.proxyMgr.GetNext()
+		_, err := atc.AddToCartMMToyshop(ctx, p.ProductID, taskCfg.SessionCookie, proxyURL, 5*time.Second)
+		if err != nil {
+			p.Extra["atc_status"] = fmt.Sprintf("❌ 加入失敗: %v", err)
+		} else {
+			p.Extra["atc_status"] = "✅ 加入購物車成功"
+		}
+	}
+
+	e.dispatch(p)
 }
 
 // dispatch 將補貨事件發送到 Channel，非阻塞防止 Worker 卡死
