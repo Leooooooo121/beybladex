@@ -10,12 +10,12 @@ import (
 	"syscall"
 	"time"
 
-	"beyblade/atc"
-	"beyblade/config"
-	"beyblade/engine"
-	"beyblade/models"
-	"beyblade/notifier"
-	"beyblade/proxy"
+	"beybladex/atc"
+	"beybladex/config"
+	"beybladex/engine"
+	"beybladex/models"
+	"beybladex/notifier"
+	"beybladex/proxy"
 )
 
 const banner = `

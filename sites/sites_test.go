@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"beyblade/config"
-	"beyblade/models"
-	"beyblade/proxy"
+	"beybladex/config"
+	"beybladex/models"
+	"beybladex/proxy"
 )
 
 func TestSiteMonitor_Factory(t *testing.T) {

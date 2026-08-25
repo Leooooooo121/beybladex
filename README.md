@@ -243,9 +243,9 @@ go build -o monitor.exe .
    import (
        "context"
        "time"
-       "beyblade/config"
-       "beyblade/models"
-       "beyblade/proxy"
+       "beybladex/config"
+       "beybladex/models"
+       "beybladex/proxy"
    )
 
    func init() {
@@ -314,10 +314,10 @@ go test -v ./...
 === RUN   TestBVShop_ParseAndFilter
 --- PASS: TestBVShop_ParseAndFilter (0.00s)
 PASS
-ok      beyblade/engine 1.494s
-ok      beyblade/models 0.340s
-ok      beyblade/proxy  0.578s
-ok      beyblade/sites  0.761s
+ok      beybladex/engine 1.494s
+ok      beybladex/models 0.340s
+ok      beybladex/proxy  0.578s
+ok      beybladex/sites  0.761s
 ```
 
 ---

@@ -10,12 +10,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"beyblade/atc"
-	"beyblade/config"
-	"beyblade/models"
-	"beyblade/notifier"
-	"beyblade/proxy"
-	"beyblade/sites"
+	"beybladex/atc"
+	"beybladex/config"
+	"beybladex/models"
+	"beybladex/notifier"
+	"beybladex/proxy"
+	"beybladex/sites"
 )
 
 // Engine 核心併發調度引擎

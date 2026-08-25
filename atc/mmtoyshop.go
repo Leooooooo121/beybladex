@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"beyblade/sites"
+	"beybladex/sites"
 
 	fhttp "github.com/bogdanfinn/fhttp"
 )

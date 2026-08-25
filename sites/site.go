@@ -6,9 +6,9 @@ import (
 	"sync"
 	"time"
 
-	"beyblade/config"
-	"beyblade/models"
-	"beyblade/proxy"
+	"beybladex/config"
+	"beybladex/models"
+	"beybladex/proxy"
 
 	tls_client "github.com/bogdanfinn/tls-client"
 	"github.com/bogdanfinn/tls-client/profiles"

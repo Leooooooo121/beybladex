@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"beyblade/config"
-	"beyblade/models"
+	"beybladex/config"
+	"beybladex/models"
 )
 
 // Notifier 通知發送介面

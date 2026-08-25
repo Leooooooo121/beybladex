@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"beyblade/config"
-	"beyblade/models"
-	"beyblade/proxy"
+	"beybladex/config"
+	"beybladex/models"
+	"beybladex/proxy"
 
 	fhttp "github.com/bogdanfinn/fhttp"
 )

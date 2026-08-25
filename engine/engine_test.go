@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"beyblade/config"
-	"beyblade/models"
-	"beyblade/proxy"
-	"beyblade/sites"
+	"beybladex/config"
+	"beybladex/models"
+	"beybladex/proxy"
+	"beybladex/sites"
 )
 
 type mockNotifier struct {

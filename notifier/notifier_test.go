@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"beyblade/config"
-	"beyblade/models"
+	"beybladex/config"
+	"beybladex/models"
 )
 
 func TestConsoleNotifier_Send(t *testing.T) {
