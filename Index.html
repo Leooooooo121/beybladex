@@ -1254,14 +1254,15 @@
         const q  = document.getElementById('s3-search').value.trim();
         const qn = normalizeQ(q);
         const el = document.getElementById('s3-list');
-        const filtered = q
+        const filtered = (q
             ? s3Data.filter(d => {
                 const nc = normalizeQ(d.code), nn = normalizeQ(d.name);
                 return nc.includes(qn) || nn.includes(qn) ||
                        d.code.toLowerCase().includes(q.toLowerCase()) ||
                        d.name.toLowerCase().includes(q.toLowerCase());
               })
-            : s3Data;
+            : s3Data.slice()
+        ).sort((a, b) => a.code.localeCompare(b.code, undefined, { numeric: true }));
         if (!filtered.length) {
             el.innerHTML = q ? '<div class="edit-empty">查無符合結果</div>' : '<div class="edit-empty">沒有資料</div>';
             return;
