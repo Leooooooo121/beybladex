@@ -347,6 +347,314 @@
         }
         .page-content { display: none; }
         .page-content.active { display: block; }
+
+        /* ══════════════════════════════
+           EDITOR PAGE STYLES
+        ══════════════════════════════ */
+
+        /* 編輯工具子分頁 */
+        .etabs-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .etab {
+            padding: 8px 20px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.14);
+            color: rgba(255,255,255,0.5);
+            font-size: .88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .18s;
+            user-select: none;
+        }
+        .etab:hover { background: rgba(255,255,255,0.13); color: #fff; border-color: rgba(255,255,255,0.28); }
+        .etab.active {
+            background: rgba(139,92,246,0.28);
+            color: #fff;
+            border-color: rgba(139,92,246,0.6);
+            box-shadow: 0 0 14px rgba(139,92,246,0.28), inset 0 1px 0 rgba(255,255,255,0.18);
+        }
+        .etab-content { display: none; }
+        .etab-content.active { display: block; }
+
+        /* 卡片 */
+        .edit-card {
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-top-color: rgba(255,255,255,0.28);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .edit-card-title {
+            font-size: .78rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.45);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+        }
+        .edit-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 480px) { .edit-form-grid { grid-template-columns: 1fr; } }
+
+        /* 輸入框 */
+        .edit-input {
+            width: 100%;
+            padding: 9px 12px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 9px;
+            color: #fff;
+            font-size: .9rem;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+            box-sizing: border-box;
+        }
+        .edit-input::placeholder { color: rgba(255,255,255,0.3); }
+        .edit-input:focus {
+            border-color: rgba(139,92,246,0.65);
+            box-shadow: 0 0 0 2px rgba(139,92,246,0.15);
+        }
+
+        /* 下拉選單 */
+        .edit-select {
+            padding: 9px 12px;
+            background: rgba(15,15,35,0.85);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 9px;
+            color: #fff;
+            font-size: .9rem;
+            outline: none;
+            cursor: pointer;
+            transition: border-color .2s;
+        }
+        .edit-select:focus { border-color: rgba(139,92,246,0.65); }
+        .edit-select option { background: #1a1a30; }
+
+        /* 篩選列 */
+        .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-row .edit-select { flex: 1; min-width: 130px; }
+
+        /* 新增按鈕 */
+        .btn-add {
+            padding: 9px 22px;
+            background: linear-gradient(135deg, rgba(139,92,246,0.45), rgba(79,70,229,0.45));
+            border: 1px solid rgba(139,92,246,0.5);
+            border-radius: 9px;
+            color: #fff;
+            font-weight: 700;
+            font-size: .9rem;
+            cursor: pointer;
+            transition: all .18s;
+            margin-top: 6px;
+        }
+        .btn-add:hover { background: linear-gradient(135deg, rgba(139,92,246,0.65), rgba(79,70,229,0.65)); transform: translateY(-1px); }
+        .btn-add:active { transform: scale(.97); }
+
+        /* 資料列 */
+        .data-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            margin-bottom: 6px;
+            transition: background .15s;
+        }
+        .data-row:hover { background: rgba(255,255,255,0.07); }
+        .data-info { flex: 1; min-width: 0; }
+        .data-main {
+            font-weight: 600;
+            font-size: .93rem;
+            color: #fff;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .data-sub { font-size: .78rem; color: rgba(255,255,255,0.42); margin-top: 2px; }
+        .data-link {
+            font-size: .76rem;
+            color: rgba(139,180,255,0.75);
+            margin-top: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .data-link a { color: inherit; text-decoration: none; }
+        .data-link a:hover { text-decoration: underline; }
+        .data-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+        .btn-edit {
+            padding: 6px 12px;
+            background: rgba(59,130,246,0.15);
+            border: 1px solid rgba(59,130,246,0.32);
+            border-radius: 7px;
+            color: #93c5fd;
+            font-size: .82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .18s;
+            white-space: nowrap;
+        }
+        .btn-edit:hover { background: rgba(59,130,246,0.28); }
+
+        .btn-del {
+            padding: 6px 12px;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.28);
+            border-radius: 7px;
+            color: #fca5a5;
+            font-size: .82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .18s;
+            white-space: nowrap;
+        }
+        .btn-del:hover { background: rgba(239,68,68,0.22); }
+
+        /* 代號標籤 */
+        .s3-code {
+            display: inline-block;
+            background: rgba(139,92,246,0.22);
+            border: 1px solid rgba(139,92,246,0.4);
+            border-radius: 6px;
+            padding: 2px 8px;
+            font-weight: 700;
+            font-size: .82rem;
+            color: #c4b5fd;
+            flex-shrink: 0;
+        }
+        .s3-name { font-size: .92rem; color: #fff; }
+
+        .edit-empty { text-align: center; padding: 28px; color: rgba(255,255,255,0.3); font-size: .9rem; }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            width: 100%;
+            max-width: 440px;
+            border-radius: 18px;
+            padding: 22px;
+        }
+        .modal-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .modal-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 0;
+            font-size: .88rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .modal-info-row span:first-child { color: rgba(255,255,255,0.42); }
+        .modal-info-row span:last-child { color: #fff; font-weight: 600; max-width: 65%; text-align: right; word-break: break-all; }
+        .modal-field { margin-top: 12px; }
+        .modal-field label { display: block; font-size: .8rem; color: rgba(255,255,255,0.48); margin-bottom: 5px; }
+        .modal-actions { display: flex; gap: 8px; margin-top: 18px; justify-content: flex-end; }
+
+        .btn-cancel {
+            padding: 9px 18px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 9px;
+            color: rgba(255,255,255,0.65);
+            font-size: .9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .18s;
+        }
+        .btn-cancel:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
+        .btn-save {
+            padding: 9px 22px;
+            background: linear-gradient(135deg, rgba(139,92,246,0.5), rgba(79,70,229,0.5));
+            border: 1px solid rgba(139,92,246,0.5);
+            border-radius: 9px;
+            color: #fff;
+            font-size: .9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .18s;
+        }
+        .btn-save:hover { background: linear-gradient(135deg, rgba(139,92,246,0.7), rgba(79,70,229,0.7)); }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(70px);
+            background: rgba(20,20,40,0.95);
+            border: 1px solid rgba(255,255,255,0.16);
+            border-radius: 12px;
+            padding: 11px 24px;
+            color: #fff;
+            font-size: .9rem;
+            font-weight: 600;
+            z-index: 2000;
+            transition: transform .25s ease, opacity .25s;
+            opacity: 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.success { border-color: rgba(34,197,94,0.45); color: #86efac; }
+        .toast.error   { border-color: rgba(239,68,68,0.45);  color: #fca5a5; }
+
+        /* ── Loading ── */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.25);
+            z-index: 900;
+            align-items: center;
+            justify-content: center;
+        }
+        .loading-overlay.show { display: flex; }
+        .spinner {
+            width: 36px; height: 36px;
+            border: 3px solid rgba(255,255,255,0.18);
+            border-top-color: #a78bfa;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -362,6 +670,7 @@
     <div class="page-tab" data-page="editor" onclick="switchPage('editor')">編輯工具</div>
 </div>
 
+<!-- ══ 店家資訊頁 ══ -->
 <div id="page-store" class="page-content active">
     <div class="container">
         <h1>Funbox 店家資訊</h1>
@@ -378,22 +687,104 @@
     </div>
 </div>
 
+<!-- ══ 編輯工具頁 ══ -->
 <div id="page-editor" class="page-content">
     <div class="container">
-        <!-- 待實作：Google 試算表編輯工具 -->
+        <h1>編輯工具</h1>
+
+        <div class="etabs-bar">
+            <div class="etab active" data-etab="sheet1" onclick="switchEtab('sheet1')">商品資訊</div>
+            <div class="etab" data-etab="sheet2" onclick="switchEtab('sheet2')">連結管理</div>
+            <div class="etab" data-etab="sheet3" onclick="switchEtab('sheet3')">代號管理</div>
+        </div>
+
+        <!-- 工作表1：商品資訊 -->
+        <div id="etab-sheet1" class="etab-content active">
+            <div class="edit-card">
+                <div class="edit-card-title">新增商品資訊</div>
+                <div class="edit-form-grid">
+                    <input id="s1-region"  class="edit-input" placeholder="地區">
+                    <input id="s1-store"   class="edit-input" placeholder="門市">
+                    <input id="s1-product" class="edit-input" placeholder="商品名稱">
+                    <input id="s1-link"    class="edit-input" placeholder="購買連結">
+                </div>
+                <button class="btn-add" onclick="addSheet1()">＋ 新增</button>
+            </div>
+
+            <div class="edit-card">
+                <div class="filter-row">
+                    <select id="s1-fr" class="edit-select" onchange="onRegionFilter()">
+                        <option value="">所有地區</option>
+                    </select>
+                    <select id="s1-fs" class="edit-select" onchange="renderSheet1()">
+                        <option value="">所有門市</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="s1-list"></div>
+        </div>
+
+        <!-- 工作表2：連結管理 -->
+        <div id="etab-sheet2" class="etab-content">
+            <div class="edit-card">
+                <div class="edit-card-title">新增連結</div>
+                <input id="s2-url"  class="edit-input" placeholder="網址" style="margin-bottom:8px">
+                <input id="s2-note" class="edit-input" placeholder="備註（可空）">
+                <button class="btn-add" onclick="addSheet2()" style="margin-top:10px">＋ 新增</button>
+            </div>
+            <div id="s2-list"></div>
+        </div>
+
+        <!-- 工作表3：代號管理 -->
+        <div id="etab-sheet3" class="etab-content">
+            <div class="edit-card">
+                <input id="s3-search" class="edit-input"
+                    placeholder="🔍 搜尋代號或名稱 (如: bx40、ux-01、爆刃)"
+                    oninput="renderSheet3()">
+            </div>
+            <div class="edit-card">
+                <div class="edit-card-title">新增代號</div>
+                <div class="edit-form-grid">
+                    <input id="s3-code" class="edit-input" placeholder="代號 (如: BX-40)">
+                    <input id="s3-name" class="edit-input" placeholder="完整名稱">
+                </div>
+                <button class="btn-add" onclick="addSheet3()">＋ 新增</button>
+            </div>
+            <div id="s3-list"></div>
+        </div>
     </div>
 </div>
 
+<!-- ── Modal ── -->
+<div id="edit-modal" class="modal-overlay" onclick="modalBgClick(event)">
+    <div class="modal-box gl">
+        <div class="modal-title" id="modal-title">編輯</div>
+        <div id="modal-body"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="hideModal()">取消</button>
+            <button class="btn-save" id="modal-save-btn">儲存</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Loading ── -->
+<div id="loading-overlay" class="loading-overlay">
+    <div class="spinner"></div>
+</div>
+
+<!-- ── Toast ── -->
+<div id="toast" class="toast"></div>
+
 <script>
-    // region order (north → south → outlying)
+    // ══ STORE PAGE ══════════════════════════════════════════════
+
     const REGION_ORDER = ["台北市","新北市","桃園市","新竹市","新竹縣","苗栗縣","台中市","彰化縣","雲林縣","嘉義市","台南市","高雄市","屏東縣","宜蘭縣","花蓮縣","台東縣","澎湖縣"];
 
     let stores = [];
 
     function loadStores() {
         document.getElementById('list').innerHTML = '<div class="empty">載入中…</div>';
-
-        // 改透過 Apps Script 內建安全通道呼叫後端函式，不再外洩 Google 試算表 ID 與 CSV 網址
         google.script.run
             .withSuccessHandler(function(data) {
                 stores = data.map(c => ({
@@ -405,13 +796,12 @@
                 })).filter(s => s.name.trim());
                 render();
             })
-            .withFailureHandler(function(err) {
+            .withFailureHandler(function() {
                 document.getElementById('list').innerHTML = '<div class="empty">資料載入失敗，請重新整理頁面 😢</div>';
             })
             .getStoreData();
     }
 
-    // SVG icons
     const svgVoom = `<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2" fill="none" stroke="white" stroke-width="2"/><polygon points="10,9 10,15 16,12" fill="white"/><line x1="8" y1="20" x2="16" y2="20" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="18" x2="12" y2="20" stroke="white" stroke-width="2"/></svg>`;
     const svgFB   = `<svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="white"/></svg>`;
     const svgLine = `<svg viewBox="0 0 24 24"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.07 9.436-6.975C23.176 14.393 24 12.458 24 10.314" fill="white"/></svg>`;
@@ -431,7 +821,6 @@
         render();
     }
 
-    // ── 勾選紀錄（獨立於點擊紀錄）──
     function ckey(name) { return 'chk_' + name; }
     function isChecked(name) { return localStorage.getItem(ckey(name)) === '1'; }
     function toggleCheck(name, el) {
@@ -502,10 +891,7 @@
         }).join('');
     }
 
-    function setRegion(r) {
-        activeRegion = r;
-        render();
-    }
+    function setRegion(r) { activeRegion = r; render(); }
 
     function render() {
         const q = document.getElementById('search').value.toLowerCase().trim();
@@ -569,7 +955,6 @@
 
     loadStores();
 
-    // Mouse drag-to-scroll for region tabs
     (function() {
         const el = document.getElementById('regionTabs');
         let isDown = false, startX, scrollLeft, moved = false;
@@ -593,6 +978,366 @@
     function switchPage(id) {
         document.querySelectorAll('.page-tab').forEach(t => t.classList.toggle('active', t.dataset.page === id));
         document.querySelectorAll('.page-content').forEach(p => p.classList.toggle('active', p.id === 'page-' + id));
+        if (id === 'editor' && !s1Loaded) loadSheet1();
+    }
+
+    // ══ EDITOR PAGE ═════════════════════════════════════════════
+
+    let s1Data = [], s2Data = [], s3Data = [];
+    let s1Loaded = false, s2Loaded = false, s3Loaded = false;
+
+    function switchEtab(id) {
+        document.querySelectorAll('.etab').forEach(t => t.classList.toggle('active', t.dataset.etab === id));
+        document.querySelectorAll('.etab-content').forEach(p => p.classList.toggle('active', p.id === 'etab-' + id));
+        if (id === 'sheet1' && !s1Loaded) loadSheet1();
+        if (id === 'sheet2' && !s2Loaded) loadSheet2();
+        if (id === 'sheet3' && !s3Loaded) loadSheet3();
+    }
+
+    // ── 共用工具 ──────────────────────────────────────────────
+    function showToast(msg, type) {
+        const t = document.getElementById('toast');
+        t.className = 'toast' + (type ? ' ' + type : ' success');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2600);
+    }
+    function showLoading() { document.getElementById('loading-overlay').classList.add('show'); }
+    function hideLoading() { document.getElementById('loading-overlay').classList.remove('show'); }
+
+    function escH(s) {
+        return String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // 模糊搜尋正規化：移除 - 與空格並轉小寫
+    function normalizeQ(s) { return s.toLowerCase().replace(/[-\s]/g, ''); }
+
+    // ── Modal ──────────────────────────────────────────────────
+    function showModal(title, bodyHtml, saveFn) {
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-body').innerHTML = bodyHtml;
+        document.getElementById('modal-save-btn').onclick = saveFn;
+        document.getElementById('edit-modal').classList.add('show');
+    }
+    function hideModal() { document.getElementById('edit-modal').classList.remove('show'); }
+    function modalBgClick(e) { if (e.target.id === 'edit-modal') hideModal(); }
+
+    // ── 工作表1：商品資訊 ──────────────────────────────────────
+    function loadSheet1() {
+        s1Loaded = true;
+        document.getElementById('s1-list').innerHTML = '<div class="edit-empty">載入中…</div>';
+        google.script.run
+            .withSuccessHandler(data => { s1Data = data; buildS1Filters(); renderSheet1(); })
+            .withFailureHandler(() => {
+                s1Loaded = false;
+                document.getElementById('s1-list').innerHTML = '<div class="edit-empty">載入失敗，請重試</div>';
+            })
+            .getSheet1Data();
+    }
+
+    function buildS1Filters() {
+        const regions = [...new Set(s1Data.map(r => r.region).filter(Boolean))];
+        const rSel = document.getElementById('s1-fr');
+        const curR = rSel.value;
+        rSel.innerHTML = '<option value="">所有地區</option>' +
+            regions.map(r => `<option value="${escH(r)}"${r === curR ? ' selected' : ''}>${escH(r)}</option>`).join('');
+        buildS1StoreFilter(curR);
+    }
+
+    function buildS1StoreFilter(region) {
+        const stores = [...new Set(s1Data.filter(r => !region || r.region === region).map(r => r.store).filter(Boolean))];
+        const sSel = document.getElementById('s1-fs');
+        const curS = sSel.value;
+        sSel.innerHTML = '<option value="">所有門市</option>' +
+            stores.map(s => `<option value="${escH(s)}"${s === curS ? ' selected' : ''}>${escH(s)}</option>`).join('');
+    }
+
+    function onRegionFilter() {
+        buildS1StoreFilter(document.getElementById('s1-fr').value);
+        renderSheet1();
+    }
+
+    function renderSheet1() {
+        const r = document.getElementById('s1-fr').value;
+        const s = document.getElementById('s1-fs').value;
+        const filtered = s1Data.filter(d => (!r || d.region === r) && (!s || d.store === s));
+        const el = document.getElementById('s1-list');
+        if (!filtered.length) { el.innerHTML = '<div class="edit-empty">沒有符合的資料</div>'; return; }
+        el.innerHTML = filtered.map(d => `
+            <div class="data-row">
+                <div class="data-info">
+                    <div class="data-main">${escH(d.product) || '—'}</div>
+                    <div class="data-sub">${escH(d.region)} ／ ${escH(d.store)}</div>
+                    ${d.link ? `<div class="data-link"><a href="${escH(d.link)}" target="_blank">${escH(d.link)}</a></div>` : ''}
+                </div>
+                <div class="data-actions">
+                    <button class="btn-edit" onclick="editSheet1(${d.row})">編輯</button>
+                    <button class="btn-del"  onclick="deleteSheet1(${d.row})">刪除</button>
+                </div>
+            </div>`).join('');
+    }
+
+    function addSheet1() {
+        const region  = document.getElementById('s1-region').value.trim();
+        const store   = document.getElementById('s1-store').value.trim();
+        const product = document.getElementById('s1-product').value.trim();
+        const link    = document.getElementById('s1-link').value.trim();
+        if (!region || !store || !product) { showToast('地區、門市、商品名稱為必填', 'error'); return; }
+        showLoading();
+        google.script.run
+            .withSuccessHandler(res => {
+                hideLoading();
+                if (res.success) {
+                    showToast('新增成功');
+                    ['s1-region','s1-store','s1-product','s1-link'].forEach(id => document.getElementById(id).value = '');
+                    s1Loaded = false; loadSheet1();
+                } else showToast(res.error || '新增失敗', 'error');
+            })
+            .withFailureHandler(() => { hideLoading(); showToast('新增失敗', 'error'); })
+            .addSheet1Row(region, store, product, link);
+    }
+
+    function deleteSheet1(row) {
+        if (!confirm('確定要刪除這筆商品資訊嗎？')) return;
+        showLoading();
+        google.script.run
+            .withSuccessHandler(res => {
+                hideLoading();
+                if (res.success) { showToast('已刪除'); s1Loaded = false; loadSheet1(); }
+                else showToast(res.error || '刪除失敗', 'error');
+            })
+            .withFailureHandler(() => { hideLoading(); showToast('刪除失敗', 'error'); })
+            .deleteSheet1Row(row);
+    }
+
+    function editSheet1(row) {
+        const d = s1Data.find(x => x.row === row);
+        if (!d) return;
+        showModal('編輯商品資訊', `
+            <div class="modal-info-row"><span>地區</span><span>${escH(d.region)}</span></div>
+            <div class="modal-info-row"><span>門市</span><span>${escH(d.store)}</span></div>
+            <div class="modal-field">
+                <label>商品名稱</label>
+                <input id="m-product" class="edit-input" value="${escH(d.product)}">
+            </div>
+            <div class="modal-field">
+                <label>購買連結</label>
+                <input id="m-link" class="edit-input" value="${escH(d.link)}">
+            </div>`, () => saveSheet1(row));
+    }
+
+    function saveSheet1(row) {
+        const product = document.getElementById('m-product').value.trim();
+        const link    = document.getElementById('m-link').value.trim();
+        if (!product) { showToast('商品名稱為必填', 'error'); return; }
+        hideModal(); showLoading();
+        google.script.run
+            .withSuccessHandler(res => {
+                hideLoading();
+                if (res.success) { showToast('已儲存'); s1Loaded = false; loadSheet1(); }
+                else showToast(res.error || '儲存失敗', 'error');
+            })
+            .withFailureHandler(() => { hideLoading(); showToast('儲存失敗', 'error'); })
+            .updateSheet1Row(row, product, link);
+    }
+
+    // ── 工作表2：連結管理 ──────────────────────────────────────
+    function loadSheet2() {
+        s2Loaded = true;
+        document.getElementById('s2-list').innerHTML = '<div class="edit-empty">載入中…</div>';
+        google.script.run
+            .withSuccessHandler(data => { s2Data = data; renderSheet2(); })
+            .withFailureHandler(() => {
+                s2Loaded = false;
+                document.getElementById('s2-list').innerHTML = '<div class="edit-empty">載入失敗，請重試</div>';
+            })
+            .getSheet2Data();
+    }
+
+    function renderSheet2() {
+        const el = document.getElementById('s2-list');
+        if (!s2Data.length) { el.innerHTML = '<div class="edit-empty">沒有資料</div>'; return; }
+        el.innerHTML = s2Data.map(d => `
+            <div class="data-row">
+                <div class="data-info">
+                    <div class="data-link" style="font-size:.9rem;color:rgba(139,180,255,.9)">
+                        <a href="${escH(d.url)}" target="_blank">${escH(d.url)}</a>
+                    </div>
+                    ${d.note ? `<div class="data-sub">${escH(d.note)}</div>` : ''}
+                </div>
+                <div class="data-actions">
+                    <button class="btn-edit" onclick="editSheet2(${d.row})">編輯</button>
+                    <button class="btn-del"  onclick="deleteSheet2(${d.row})">刪除</button>
+                </div>
+            </div>`).join('');
+    }
+
+    function addSheet2() {
+        const url  = document.getElementById('s2-url').value.trim();
+        const note = document.getElementById('s2-note').value.trim();
+        if (!url) { showToast('網址為必填', 'error'); return; }
+        showLoading();
+        google.script.run
+            .withSuccessHandler(res => {
+                hideLoading();
+                if (res.success) {
+                    showToast('新增成功');
+                    document.getElementById('s2-url').value = '';
+                    document.getElementById('s2-note').value = '';
+                    s2Loaded = false; loadSheet2();
+                } else showToast(res.error || '新增失敗', 'error');
+            })
+            .withFailureHandler(() => { hideLoading(); showToast('新增失敗', 'error'); })
+            .addSheet2Row(url, note);
+    }
+
+    function deleteSheet2(row) {
+        if (!confirm('確定要刪除這筆連結嗎？')) return;
+        showLoading();
+        google.script.run
+            .withSuccessHandler(res => {
+                hideLoading();
+                if (res.success) { showToast('已刪除'); s2Loaded = false; loadSheet2(); }
+                else showToast(res.error || '刪除失敗', 'error');
+            })
+            .withFailureHandler(() => { hideLoading(); showToast('刪除失敗', 'error'); })
+            .deleteSheet2Row(row);
+    }
+
+    function editSheet2(row) {
+        const d = s2Data.find(x => x.row === row);
+        if (!d) return;
+        showModal('編輯連結', `
+            <div class="modal-field">
+                <label>網址</label>
+                <input id="m-url" class="edit-input" value="${escH(d.url)}">
+            </div>
+            <div class="modal-field">
+                <label>備註（可空）</label>
+                <input id="m-note" class="edit-input" value="${escH(d.note)}">
+            </div>`, () => saveSheet2(row));
+    }
+
+    function saveSheet2(row) {
+        const url  = document.getElementById('m-url').value.trim();
+        const note = document.getElementById('m-note').value.trim();
+        if (!url) { showToast('網址為必填', 'error'); return; }
+        hideModal(); showLoading();
+        google.script.run
+            .withSuccessHandler(res => {
+                hideLoading();
+                if (res.success) { showToast('已儲存'); s2Loaded = false; loadSheet2(); }
+                else showToast(res.error || '儲存失敗', 'error');
+            })
+            .withFailureHandler(() => { hideLoading(); showToast('儲存失敗', 'error'); })
+            .updateSheet2Row(row, url, note);
+    }
+
+    // ── 工作表3：代號管理 ──────────────────────────────────────
+    function loadSheet3() {
+        s3Loaded = true;
+        document.getElementById('s3-list').innerHTML = '<div class="edit-empty">載入中…</div>';
+        google.script.run
+            .withSuccessHandler(data => { s3Data = data; renderSheet3(); })
+            .withFailureHandler(() => {
+                s3Loaded = false;
+                document.getElementById('s3-list').innerHTML = '<div class="edit-empty">載入失敗，請重試</div>';
+            })
+            .getSheet3Data();
+    }
+
+    function renderSheet3() {
+        const q  = document.getElementById('s3-search').value.trim();
+        const qn = normalizeQ(q);
+        const el = document.getElementById('s3-list');
+        const filtered = q
+            ? s3Data.filter(d => {
+                const nc = normalizeQ(d.code), nn = normalizeQ(d.name);
+                return nc.includes(qn) || nn.includes(qn) ||
+                       d.code.toLowerCase().includes(q.toLowerCase()) ||
+                       d.name.toLowerCase().includes(q.toLowerCase());
+              })
+            : s3Data;
+        if (!filtered.length) {
+            el.innerHTML = q ? '<div class="edit-empty">查無符合結果</div>' : '<div class="edit-empty">沒有資料</div>';
+            return;
+        }
+        el.innerHTML = filtered.map(d => `
+            <div class="data-row">
+                <div class="data-info" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                    <span class="s3-code">${escH(d.code)}</span>
+                    <span class="s3-name">${escH(d.name)}</span>
+                </div>
+                <div class="data-actions">
+                    <button class="btn-edit" onclick="editSheet3(${d.row})">編輯</button>
+                    <button class="btn-del"  onclick="deleteSheet3(${d.row})">刪除</button>
+                </div>
+            </div>`).join('');
+    }
+
+    function addSheet3() {
+        const code = document.getElementById('s3-code').value.trim();
+        const name = document.getElementById('s3-name').value.trim();
+        if (!code || !name) { showToast('代號和完整名稱為必填', 'error'); return; }
+        showLoading();
+        google.script.run
+            .withSuccessHandler(res => {
+                hideLoading();
+                if (res.success) {
+                    showToast('新增成功');
+                    document.getElementById('s3-code').value = '';
+                    document.getElementById('s3-name').value = '';
+                    s3Loaded = false; loadSheet3();
+                } else showToast(res.error || '新增失敗', 'error');
+            })
+            .withFailureHandler(() => { hideLoading(); showToast('新增失敗', 'error'); })
+            .addSheet3Row(code, name);
+    }
+
+    function deleteSheet3(row) {
+        if (!confirm('確定要刪除這筆代號嗎？')) return;
+        showLoading();
+        google.script.run
+            .withSuccessHandler(res => {
+                hideLoading();
+                if (res.success) { showToast('已刪除'); s3Loaded = false; loadSheet3(); }
+                else showToast(res.error || '刪除失敗', 'error');
+            })
+            .withFailureHandler(() => { hideLoading(); showToast('刪除失敗', 'error'); })
+            .deleteSheet3Row(row);
+    }
+
+    function editSheet3(row) {
+        const d = s3Data.find(x => x.row === row);
+        if (!d) return;
+        showModal('編輯代號', `
+            <div class="modal-field">
+                <label>代號</label>
+                <input id="m-code" class="edit-input" value="${escH(d.code)}">
+            </div>
+            <div class="modal-field">
+                <label>完整名稱</label>
+                <input id="m-name" class="edit-input" value="${escH(d.name)}">
+            </div>`, () => saveSheet3(row));
+    }
+
+    function saveSheet3(row) {
+        const code = document.getElementById('m-code').value.trim();
+        const name = document.getElementById('m-name').value.trim();
+        if (!code || !name) { showToast('代號和完整名稱為必填', 'error'); return; }
+        hideModal(); showLoading();
+        google.script.run
+            .withSuccessHandler(res => {
+                hideLoading();
+                if (res.success) { showToast('已儲存'); s3Loaded = false; loadSheet3(); }
+                else showToast(res.error || '儲存失敗', 'error');
+            })
+            .withFailureHandler(() => { hideLoading(); showToast('儲存失敗', 'error'); })
+            .updateSheet3Row(row, code, name);
     }
 </script>
 </body>
